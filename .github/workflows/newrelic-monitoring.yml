@@ -1,0 +1,36 @@
+name: New Relic Monitoring
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  send_to_newrelic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        run: npm test
+
+      - name: Send Build Status to New Relic
+        env:
+          NEW_RELIC_INSERT_KEY: ${{ secrets.NEW_RELIC_INSERT_KEY }}
+        run: |
+          STATUS=${{ job.status }}
+          MESSAGE="Build $STATUS for commit ${{ github.sha }} on branch ${{ github.ref }}"
+          curl -X POST https://log-api.newrelic.com/log/v1 \
+            -H "Content-Type: application/json" \
+            -H "Api-Key: $NEW_RELIC_INSERT_KEY" \
+            -d "[{ \"message\": \"$MESSAGE\", \"level\": \"info\", \"commit\": \"${{ github.sha }}\", \"branch\": \"${{ github.ref }}\" }]"
