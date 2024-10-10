@@ -15,30 +15,46 @@ import {
   AlertIcon,
   HStack,
   Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
   VStack,
 } from '@chakra-ui/react';
 import { FiRefreshCw } from 'react-icons/fi';
-import useFetchJenkinsJobs from '../../hooks/useFetchJenkinsJobs';
+import useFetchJenkinsJobs, { JenkinsJob } from '../../hooks/useFetchJenkinsJobs';
 import useTriggerJenkinsJob from '../../hooks/useTriggerJenkinsJob';
 import useFetchJenkinsJobStatus from '../../hooks/useFetchJenkinsJobStatus';
-
-interface JenkinsJob {
-  name: string;
-  color: string;
-}
+import useJenkinsRealTimeUpdates from '../../hooks/useJenkinsRealTimeUpdates';
+import { toast } from 'react-toastify';
 
 const JenkinsJobsWidget = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedJob, setSelectedJob] = React.useState<string | null>(null);
   const { data, isLoading, isError, refetch } = useFetchJenkinsJobs();
   const triggerJobMutation = useTriggerJenkinsJob();
-  const [selectedJob, setSelectedJob] = React.useState<string | null>(null);
   const { data: jobStatus, isLoading: isStatusLoading, isError: isStatusError } = useFetchJenkinsJobStatus(selectedJob || '');
 
+  // Initialize real-time updates
+  useJenkinsRealTimeUpdates();
+
   const handleTrigger = (jobName: string) => {
-    triggerJobMutation.mutate(jobName);
+    triggerJobMutation.mutate(jobName, {
+      onSuccess: () => {
+        toast.success(`Job "${jobName}" triggered successfully.`);
+      },
+      onError: () => {
+        toast.error(`Failed to trigger job "${jobName}".`);
+      },
+    });
   };
 
   const handleViewStatus = (jobName: string) => {
     setSelectedJob(jobName);
+    onOpen();
   };
 
   return (
@@ -97,23 +113,34 @@ const JenkinsJobsWidget = () => {
       </CardBody>
 
       {/* Status Modal */}
-      {selectedJob && (
-        <Alert status={isStatusError ? 'error' : 'info'} variant="left-accent" mb={4}>
-          <AlertIcon />
-          {isStatusLoading ? (
-            <Spinner size="sm" />
-          ) : isStatusError ? (
-            'Failed to load job status.'
-          ) : (
-            <>
-              <Text><strong>Job:</strong> {selectedJob}</Text>
-              <Text><strong>Result:</strong> {jobStatus?.result || 'N/A'}</Text>
-              <Text><strong>Duration:</strong> {jobStatus?.duration}ms</Text>
-              <Text><strong>Timestamp:</strong> {new Date(jobStatus?.timestamp || 0).toLocaleString()}</Text>
-            </>
-          )}
-        </Alert>
-      )}
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Job Status</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {isStatusLoading ? (
+              <Center>
+                <Spinner size="lg" />
+              </Center>
+            ) : isStatusError ? (
+              <Alert status="error">
+                <AlertIcon />
+                Failed to load job status.
+              </Alert>
+            ) : jobStatus ? (
+              <VStack align="start" spacing={2}>
+                <Text><strong>Job:</strong> {selectedJob}</Text>
+                <Text><strong>Result:</strong> {jobStatus.result || 'In Progress'}</Text>
+                <Text><strong>Duration:</strong> {jobStatus.duration} ms</Text>
+                <Text><strong>Timestamp:</strong> {new Date(jobStatus.timestamp).toLocaleString()}</Text>
+              </VStack>
+            ) : (
+              <Text>No status available.</Text>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Card>
   );
 };

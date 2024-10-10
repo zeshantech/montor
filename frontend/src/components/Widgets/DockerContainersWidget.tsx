@@ -1,6 +1,4 @@
-// src/components/Widgets/DockerContainersWidget.tsx
-
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
     Card,
     CardHeader,
@@ -14,7 +12,7 @@ import {
     Alert,
     AlertIcon,
     HStack,
-    Text,
+    Box,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -22,29 +20,17 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
-    Box,
+    Text,
     VStack,
 } from '@chakra-ui/react';
 import { FiLogIn, FiRefreshCw } from 'react-icons/fi';
-import useFetchDockerContainers from '../../hooks/useFetchDockerContainers';
+import useFetchDockerContainers, { DockerContainer } from '../../hooks/useFetchDockerContainers';
 import useStartDockerContainer from '../../hooks/useStartDockerContainer';
 import useStopDockerContainer from '../../hooks/useStopDockerContainer';
 import useRemoveDockerContainer from '../../hooks/useRemoveDockerContainer';
 import useFetchDockerLogs from '../../hooks/useFetchDockerLogs';
-
-interface DockerContainer {
-    Id: string;
-    Names: string[];
-    Image: string;
-    Command: string;
-    Created: number;
-    State: string;
-    Status: string;
-    Ports: any[];
-    Labels: { [key: string]: string };
-    SizeRw: number;
-    SizeRootFs: number;
-}
+import useDockerRealTimeUpdates from '../../hooks/useDockerRealTimeUpdates';
+import { toast } from 'react-toastify';
 
 const DockerContainersWidget = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -55,17 +41,41 @@ const DockerContainersWidget = () => {
     const removeMutation = useRemoveDockerContainer();
     const { data: logs, isLoading: isLogsLoading, isError: isLogsError } = useFetchDockerLogs(selectedContainerId || '');
 
+    // Initialize real-time updates
+    useDockerRealTimeUpdates();
+
     const handleStart = (id: string) => {
-        startMutation.mutate(id);
+        startMutation.mutate(id, {
+            onSuccess: () => {
+                toast.success(`Container started successfully.`);
+            },
+            onError: () => {
+                toast.error(`Failed to start the container.`);
+            },
+        });
     };
 
     const handleStop = (id: string) => {
-        stopMutation.mutate(id);
+        stopMutation.mutate(id, {
+            onSuccess: () => {
+                toast.success(`Container stopped successfully.`);
+            },
+            onError: () => {
+                toast.error(`Failed to stop the container.`);
+            },
+        });
     };
 
     const handleRemove = (id: string) => {
         if (window.confirm('Are you sure you want to remove this container?')) {
-            removeMutation.mutate(id);
+            removeMutation.mutate(id, {
+                onSuccess: () => {
+                    toast.success(`Container removed successfully.`);
+                },
+                onError: () => {
+                    toast.error(`Failed to remove the container.`);
+                },
+            });
         }
     };
 
@@ -99,7 +109,6 @@ const DockerContainersWidget = () => {
                         {data && data.length > 0 ? (
                             data.map((container: DockerContainer) => (
                                 <ListItem key={container.Id} display="flex" justifyContent="space-between" alignItems="center">
-
                                     <VStack align="start">
                                         <Text fontWeight="bold">{container.Names[0]}</Text>
                                         <Text color="gray.500">{`Status: ${container.Status}`}</Text>
@@ -156,18 +165,16 @@ const DockerContainersWidget = () => {
                     <ModalHeader>Container Logs</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
-                        {isLogsLoading && (
+                        {isLogsLoading ? (
                             <Center>
                                 <Spinner size="lg" />
                             </Center>
-                        )}
-                        {isLogsError && (
+                        ) : isLogsError ? (
                             <Alert status="error">
                                 <AlertIcon />
                                 Failed to load logs for this container.
                             </Alert>
-                        )}
-                        {!isLogsLoading && !isLogsError && logs && (
+                        ) : logs ? (
                             <Box
                                 as="pre"
                                 bg="gray.800"
@@ -179,6 +186,8 @@ const DockerContainersWidget = () => {
                             >
                                 {logs}
                             </Box>
+                        ) : (
+                            <Text>No logs available.</Text>
                         )}
                     </ModalBody>
                 </ModalContent>

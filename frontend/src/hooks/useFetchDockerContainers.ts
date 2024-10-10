@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import API from "../services/api";
 
-interface DockerContainer {
+export interface DockerContainer {
   Id: string;
   Names: string[];
   Image: string;

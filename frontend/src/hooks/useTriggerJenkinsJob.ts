@@ -2,15 +2,12 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import API from "../services/api";
-
-interface TriggerJobResponse {
-  message: string;
-}
+import { toast } from "react-toastify";
 
 const useTriggerJenkinsJob = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<TriggerJobResponse, Error, string>({
+  return useMutation({
     mutationFn: async (jobName: string) => {
       const response = await API.post(
         `/jenkins/trigger/${encodeURIComponent(jobName)}`
@@ -18,12 +15,11 @@ const useTriggerJenkinsJob = () => {
       return response.data;
     },
     onSuccess: () => {
-      // Optionally, refetch Jenkins jobs or job statuses
+      toast.success("Jenkins job triggered successfully.");
       queryClient.invalidateQueries(["jenkinsJobs"]);
     },
-    onError: (error: any) => {
-      console.error("Failed to trigger Jenkins job:", error);
-      alert("Failed to trigger the Jenkins job. Please try again.");
+    onError: () => {
+      toast.error("Failed to trigger Jenkins job.");
     },
   });
 };
