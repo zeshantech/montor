@@ -1,6 +1,3 @@
-// src/pages/Profile.tsx
-
-import React from 'react';
 import { Box, Heading, Text, VStack, Button } from '@chakra-ui/react';
 import useFetchProfile from '../hooks/useFetchProfile';
 import { useAuth } from '../hooks/useAuth';

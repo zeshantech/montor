@@ -1,7 +1,26 @@
-import { Card, CardHeader, CardBody, Heading, List, ListItem, Button, Spinner, Center, Alert, AlertIcon, Text } from '@chakra-ui/react';
+// src/components/Widgets/JenkinsJobsWidget.tsx
+
+import React from 'react';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Heading,
+  List,
+  ListItem,
+  Button,
+  Spinner,
+  Center,
+  Alert,
+  AlertIcon,
+  HStack,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { FiRefreshCw } from 'react-icons/fi';
-import { useQuery } from '@tanstack/react-query';
-import API from '../../services/api';
+import useFetchJenkinsJobs from '../../hooks/useFetchJenkinsJobs';
+import useTriggerJenkinsJob from '../../hooks/useTriggerJenkinsJob';
+import useFetchJenkinsJobStatus from '../../hooks/useFetchJenkinsJobStatus';
 
 interface JenkinsJob {
   name: string;
@@ -9,27 +28,17 @@ interface JenkinsJob {
 }
 
 const JenkinsJobsWidget = () => {
-  // const { authTokens } = useAuth();
+  const { data, isLoading, isError, refetch } = useFetchJenkinsJobs();
+  const triggerJobMutation = useTriggerJenkinsJob();
+  const [selectedJob, setSelectedJob] = React.useState<string | null>(null);
+  const { data: jobStatus, isLoading: isStatusLoading, isError: isStatusError } = useFetchJenkinsJobStatus(selectedJob || '');
 
-  const { data, isLoading, isError, refetch } = useQuery<JenkinsJob[]>({
-    queryKey: ['jenkinsJobs'],
-    queryFn: async () => {
-      const response = await API.get('/jenkins/jobs');
-      return response.data;
-    },
-    staleTime: 5 * 60 * 1000,
-    retry: 1
-  });
+  const handleTrigger = (jobName: string) => {
+    triggerJobMutation.mutate(jobName);
+  };
 
-  const triggerJob = async (jobName: string) => {
-    try {
-      await API.post(`/jenkins/trigger/${encodeURIComponent(jobName)}`);
-      alert(`Job "${jobName}" triggered successfully.`);
-      refetch();
-    } catch (error: any) {
-      console.error(`Failed to trigger job "${jobName}":`, error);
-      alert(`Failed to trigger job "${jobName}".`);
-    }
+  const handleViewStatus = (jobName: string) => {
+    setSelectedJob(jobName);
   };
 
   return (
@@ -55,15 +64,29 @@ const JenkinsJobsWidget = () => {
         {!isLoading && !isError && (
           <List spacing={3}>
             {data && data.length > 0 ? (
-              data.map((job) => (
+              data.map((job: JenkinsJob) => (
                 <ListItem key={job.name} display="flex" justifyContent="space-between" alignItems="center">
-                  <Text
-                    // primary={job.name}
-                    // secondary={`Status: ${job.color.replace(/_/g, ' ')}`}
-                  >{job.name}</Text>
-                  <Button colorScheme="teal" size="sm" onClick={() => triggerJob(job.name)}>
-                    Trigger
-                  </Button>
+                  <VStack align="start">
+                    <Text fontWeight="bold">{job.name}</Text>
+                    <Text color="gray.500">{`Status: ${job.color.replace(/_/g, ' ')}`}</Text>
+                  </VStack>
+                  <HStack spacing={2}>
+                    <Button
+                      colorScheme="teal"
+                      size="sm"
+                      onClick={() => handleTrigger(job.name)}
+                      isLoading={triggerJobMutation.isPending && triggerJobMutation.variables === job.name}
+                    >
+                      Trigger
+                    </Button>
+                    <Button
+                      colorScheme="blue"
+                      size="sm"
+                      onClick={() => handleViewStatus(job.name)}
+                    >
+                      Status
+                    </Button>
+                  </HStack>
                 </ListItem>
               ))
             ) : (
@@ -72,6 +95,25 @@ const JenkinsJobsWidget = () => {
           </List>
         )}
       </CardBody>
+
+      {/* Status Modal */}
+      {selectedJob && (
+        <Alert status={isStatusError ? 'error' : 'info'} variant="left-accent" mb={4}>
+          <AlertIcon />
+          {isStatusLoading ? (
+            <Spinner size="sm" />
+          ) : isStatusError ? (
+            'Failed to load job status.'
+          ) : (
+            <>
+              <Text><strong>Job:</strong> {selectedJob}</Text>
+              <Text><strong>Result:</strong> {jobStatus?.result || 'N/A'}</Text>
+              <Text><strong>Duration:</strong> {jobStatus?.duration}ms</Text>
+              <Text><strong>Timestamp:</strong> {new Date(jobStatus?.timestamp || 0).toLocaleString()}</Text>
+            </>
+          )}
+        </Alert>
+      )}
     </Card>
   );
 };

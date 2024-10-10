@@ -6,6 +6,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
 import AuthProvider from './contexts/AuthContext';
+import SocketProvider from './contexts/SocketContext';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
 const queryClient = new QueryClient();
 
@@ -16,7 +19,10 @@ const App = () => {
       <ChakraProvider>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <AppRoutes />
+            <SocketProvider>
+              <AppRoutes />
+              <ToastContainer />
+            </SocketProvider>
           </AuthProvider>
         </QueryClientProvider>
       </ChakraProvider>

@@ -99,7 +99,7 @@ import {
       // For simplicity, assume a successful build if no failures are reported
       // In a real-world scenario, integrate with GitHub Status API or CI tool APIs
   
-      // Example: Create a CI/CD event with status IN_PROGRESS
+      // Example: Create a CI_CD event with status IN_PROGRESS
       const cicdEventInProgress = await this.cicdService.createCICDEvent(
         project,
         'push',
@@ -129,7 +129,7 @@ import {
       const branch = pullRequest.head.ref;
   
       if (action === 'opened' || action === 'synchronize') {
-        // Create a CI/CD event with status IN_PROGRESS
+        // Create a CI_CD event with status IN_PROGRESS
         const cicdEventInProgress = await this.cicdService.createCICDEvent(
           project,
           'pull_request',
