@@ -13,11 +13,43 @@ export class DockerService {
     const dockerHost = this.configService.get<string>('DOCKER_HOST') || 'http://localhost:2375';
     this.dockerApi = axios.create({
       baseURL: dockerHost,
-      timeout: 5000, // 5 seconds timeout
+      timeout: 5000,
     });
   }
+  // constructor(private readonly configService: ConfigService) {
+  //   const dockerHost = this.configService.get<string>('DOCKER_HOST') || 'http://localhost:2375';
+    
+  //   // If using Unix socket
+  //   if (dockerHost.startsWith('unix://')) {
+  //     const socketPath = dockerHost.replace('unix://', '');
+  //     this.dockerApi = axios.create({
+  //       baseURL: 'http://localhost', 
+  //       httpAgent: new http.Agent({ socketPath }),
+  //     });
+  //   } else {
+  //     // HTTPS setup if Docker API is secured
+  //     const dockerCertPath = this.configService.get<string>('DOCKER_CERT_PATH');
+  //     const dockerKeyPath = this.configService.get<string>('DOCKER_KEY_PATH');
+  //     const dockerCaPath = this.configService.get<string>('DOCKER_CA_PATH');
 
-  // List Docker containers
+  //     if (dockerCertPath && dockerKeyPath && dockerCaPath) {
+  //       this.dockerApi = axios.create({
+  //         baseURL: dockerHost,
+  //         httpsAgent: new https.Agent({
+  //           cert: fs.readFileSync(dockerCertPath),
+  //           key: fs.readFileSync(dockerKeyPath),
+  //           ca: fs.readFileSync(dockerCaPath),
+  //         }),
+  //       });
+  //     } else {
+  //       this.dockerApi = axios.create({
+  //         baseURL: dockerHost,
+  //         timeout: 5000, // 5 seconds timeout
+  //       });
+  //     }
+  //   }
+  // }
+
   async listContainers(): Promise<any> {
     try {
       const response = await this.dockerApi.get('/containers/json?all=1');
@@ -28,7 +60,6 @@ export class DockerService {
     }
   }
 
-  // Start a Docker container
   async startContainer(containerId: string): Promise<any> {
     try {
       const response = await this.dockerApi.post(`/containers/${containerId}/start`);
@@ -39,7 +70,6 @@ export class DockerService {
     }
   }
 
-  // Stop a Docker container
   async stopContainer(containerId: string): Promise<any> {
     try {
       const response = await this.dockerApi.post(`/containers/${containerId}/stop`);
@@ -50,7 +80,6 @@ export class DockerService {
     }
   }
 
-  // Remove a Docker container
   async removeContainer(containerId: string): Promise<any> {
     try {
       const response = await this.dockerApi.delete(`/containers/${containerId}?force=true`);
@@ -61,10 +90,18 @@ export class DockerService {
     }
   }
 
-  // Get Docker container logs
   async getContainerLogs(containerId: string): Promise<any> {
     try {
-      const response = await this.dockerApi.get(`/containers/${containerId}/logs?stdout=1&stderr=1&timestamps=1`);
+      // const response = await this.dockerApi.get(`/containers/${containerId}/logs?stdout=1&stderr=1&timestamps=1`);
+      const response = await this.dockerApi.get(`/containers/${containerId}/logs`, {
+        params: {
+          stdout: 1,
+          stderr: 1,
+          timestamps: 1,
+          follow: 0, // Set to 1 if streaming logs
+        },
+        responseType: 'text',
+      });
       return response.data;
     } catch (error) {
       this.logger.error(`Failed to get logs for Docker container: ${containerId}`, error.message);

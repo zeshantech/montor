@@ -1,7 +1,7 @@
 // src/hooks/useFetchSystemMetrics.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface SystemMetrics {
   cpuLoad: number[];
@@ -12,6 +12,8 @@ interface SystemMetrics {
 }
 
 const useFetchSystemMetrics = () => {
+  const { API } = useApi();
+
   return useQuery<SystemMetrics, Error>({
     queryKey: ["systemMetrics"],
     queryFn: async () => {

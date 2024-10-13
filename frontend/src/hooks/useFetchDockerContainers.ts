@@ -1,7 +1,7 @@
 // src/hooks/useFetchDockerContainers.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 export interface DockerContainer {
   Id: string;
@@ -18,6 +18,8 @@ export interface DockerContainer {
 }
 
 const useFetchDockerContainers = () => {
+  const { API } = useApi();
+
   return useQuery<DockerContainer[], Error>({
     queryKey: ["dockerContainers"],
     queryFn: async () => {

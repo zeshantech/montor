@@ -1,7 +1,7 @@
 // src/hooks/useFetchWorkflowRuns.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 export interface WorkflowRun {
   id: string;
@@ -13,6 +13,8 @@ export interface WorkflowRun {
 }
 
 const useFetchWorkflowRuns = () => {
+  const { API } = useApi();
+
   return useQuery<WorkflowRun[], Error>({
     queryKey: ["workflowRuns"],
     queryFn: async () => {

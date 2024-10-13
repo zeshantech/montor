@@ -1,9 +1,11 @@
 // src/hooks/useFetchSystemLogs.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 const useFetchSystemLogs = () => {
+  const { API } = useApi();
+
   return useQuery<string[], Error>({
     queryKey: ["systemLogs"],
     queryFn: async () => {

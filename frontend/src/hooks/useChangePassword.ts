@@ -1,7 +1,7 @@
 // src/hooks/useChangePassword.ts
 
 import { useMutation } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface ChangePasswordData {
   currentPassword: string;
@@ -14,6 +14,9 @@ interface ChangePasswordResponse {
 }
 
 const useChangePassword = () => {
+  const { API } = useApi();
+
+  
   return useMutation<ChangePasswordResponse, Error, ChangePasswordData>({
     mutationFn: async (data: ChangePasswordData) => {
       const response = await API.post("/users/change-password", data); // Ensure this endpoint exists

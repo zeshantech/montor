@@ -1,24 +1,31 @@
 // src/services/api.ts
 
-import axios from 'axios';
+import axios from "axios";
+import { useAuth } from "@clerk/clerk-react"; // Import Clerk's method to get the token
 
-const API = axios.create({
-  baseURL: 'http://localhost:3000', // Replace with your backend URL
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+export function useApi() {
+  const { getToken } = useAuth();
 
-// Add a request interceptor to include the auth token
-API.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('authToken');
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
+  const API = axios.create({
+    baseURL: "http://localhost:3000",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  API.interceptors.request.use(
+    async (config) => {
+      const token = await getToken(); // Await the token
+      console.log(token, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+  );
 
-export default API;
+  return { API };
+}

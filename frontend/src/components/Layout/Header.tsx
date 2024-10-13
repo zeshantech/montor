@@ -1,24 +1,19 @@
 // src/components/Layout/Header.tsx
 
-import React from "react";
-import { Box, Flex, Heading, Spacer, Button } from "@chakra-ui/react";
-import { useAuth } from "../../hooks/useAuth";
+import { Box, Flex, Heading, Spacer, Stack } from "@chakra-ui/react";
 import ColorModeSwitcher from "../UI/ColorModeSwitcher";
+import { UserButton } from "@clerk/clerk-react";
 
 const Header = () => {
-  const { isAuthenticated, logout } = useAuth();
-
   return (
     <Box as="header" bg="teal.500" px={4} py={2} color="white">
       <Flex alignItems="center">
         <Heading size="md">DevOps Dashboard</Heading>
         <Spacer />
-        {isAuthenticated && (
-          <Button colorScheme="teal" variant="outline" onClick={logout}>
-            Logout
-          </Button>
-        )}
-        <ColorModeSwitcher />
+        <Stack gap={1} direction={'row'}>
+          <UserButton />
+          <ColorModeSwitcher />
+        </Stack>
       </Flex>
     </Box>
   );

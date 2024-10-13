@@ -1,7 +1,7 @@
 // src/hooks/useFetchUserProfile.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface UserProfile {
   id: string;
@@ -11,6 +11,8 @@ interface UserProfile {
 }
 
 const useFetchUserProfile = () => {
+  const { API } = useApi();
+
   return useQuery<UserProfile, Error>({
     queryKey: ["userProfile"],
     queryFn: async () => {

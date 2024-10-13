@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 import { toast } from "react-toastify";
 
 interface TriggerWorkflowData {
@@ -12,6 +12,7 @@ interface TriggerWorkflowResponse {
 }
 
 const useTriggerWorkflow = () => {
+  const { API } = useApi();
   const queryClient = useQueryClient();
 
   return useMutation<TriggerWorkflowResponse, Error, TriggerWorkflowData>({

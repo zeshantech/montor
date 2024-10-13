@@ -1,13 +1,15 @@
 // src/hooks/useDeleteProject.ts
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface DeleteProjectResponse {
   message: string;
 }
 
 const useDeleteProject = () => {
+  const { API } = useApi();
+
   const queryClient = useQueryClient();
 
   return useMutation<DeleteProjectResponse, Error, string>({

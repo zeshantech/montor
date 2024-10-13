@@ -1,10 +1,11 @@
 // src/hooks/useTriggerJenkinsJob.ts
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 import { toast } from "react-toastify";
 
 const useTriggerJenkinsJob = () => {
+  const { API } = useApi();
   const queryClient = useQueryClient();
 
   return useMutation({

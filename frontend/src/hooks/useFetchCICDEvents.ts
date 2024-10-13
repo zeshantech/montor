@@ -1,7 +1,7 @@
 // src/hooks/useFetchCICDEvents.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 export interface CICDEvent {
   id: string;
@@ -12,6 +12,8 @@ export interface CICDEvent {
 }
 
 const useFetchCICDEvents = (projectId: string) => {
+  const { API } = useApi();
+
   return useQuery<CICDEvent[], Error>({
     queryKey: ["cicdEvents", projectId],
     queryFn: async () => {

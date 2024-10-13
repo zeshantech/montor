@@ -1,10 +1,12 @@
 // src/hooks/useDeleteUser.ts
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 const useDeleteUser = () => {
+  const { API } = useApi();
   const queryClient = useQueryClient();
+
 
   return useMutation({
     mutationFn: async (userId: string) => {

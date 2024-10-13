@@ -16,6 +16,7 @@ import { MonitoringModule } from './monitoring/monitoring.module';
 import { JenkinsModule } from './jenkins/jenkins.module';
 import { DockerModule } from './docker/docker.module';
 import { LoggingMiddleware } from './middleware/logging.middleware';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -27,15 +28,20 @@ import { LoggingMiddleware } from './middleware/logging.middleware';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
-        host: configService.get<string>('DATABASE_HOST'),
-        port: parseInt(configService.get<string>('DATABASE_PORT'), 10),
-        username: configService.get<string>('DATABASE_USERNAME'),
-        password: configService.get<string>('DATABASE_PASSWORD'),
-        database: configService.get<string>('DATABASE_NAME'),
+        url: configService.get('DATABASE_URI'),
+        // host: configService.get<string>('DATABASE_HOST'),
+        // port: parseInt(configService.get<string>('DATABASE_PORT'), 10),
+        // username: configService.get<string>('DATABASE_USERNAME'),
+        // password: configService.get<string>('DATABASE_PASSWORD'),
+        // database: configService.get<string>('DATABASE_NAME'),
         entities: [User, Project, CICDEvent],
         synchronize: true, // Disable in production
       }),
     }),
+    ThrottlerModule.forRoot([{
+      ttl: 60, // Time to live in seconds
+      limit: 100, // Max number of requests within TTL
+    }]),
     UsersModule,
     AuthModule,
     ProjectsModule,

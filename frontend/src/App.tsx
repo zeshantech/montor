@@ -12,23 +12,35 @@ import { ToastContainer } from "react-toastify";
 import theme from "./theme";
 import NotificationsProvider from "./contexts/NotificationsContext";
 import NotificationsCenter from "./components/Notifications/NotificationsCenter";
-
-const queryClient = new QueryClient();
+import { ClerkProvider } from "@clerk/clerk-react";
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 const App = () => {
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      mutations: {
+        onError: () => {
+          alert('error')
+        }
+      },
+    }
+  });
+
   return (
     <BrowserRouter>
       <ChakraProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <SocketProvider>
-              <NotificationsProvider>
-                <AppRoutes />
-                <NotificationsCenter />
-                <ToastContainer />
-              </NotificationsProvider>
-            </SocketProvider>
-          </AuthProvider>
+          <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
+            <AuthProvider>
+              <SocketProvider>
+                <NotificationsProvider>
+                  <AppRoutes />
+                  <NotificationsCenter />
+                  <ToastContainer />
+                </NotificationsProvider>
+              </SocketProvider>
+            </AuthProvider>
+          </ClerkProvider>
         </QueryClientProvider>
       </ChakraProvider>
     </BrowserRouter>

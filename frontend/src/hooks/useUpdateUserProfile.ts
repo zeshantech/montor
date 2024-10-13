@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface UpdateUserProfileData {
   name: string;
@@ -14,6 +14,7 @@ interface UpdateUserProfileResponse {
 }
 
 const useUpdateUserProfile = () => {
+  const { API } = useApi();
   const queryClient = useQueryClient();
 
   return useMutation<UpdateUserProfileResponse, Error, UpdateUserProfileData>({

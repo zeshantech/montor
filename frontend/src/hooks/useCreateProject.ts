@@ -1,7 +1,7 @@
 // src/hooks/useCreateProject.ts
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface CreateProjectData {
   name: string;
@@ -17,7 +17,9 @@ interface CreateProjectResponse {
 }
 
 const useCreateProject = () => {
+  const { API } = useApi();
   const queryClient = useQueryClient();
+
 
   return useMutation<CreateProjectResponse, Error, CreateProjectData>({
     mutationFn: async (projectData: CreateProjectData) => {

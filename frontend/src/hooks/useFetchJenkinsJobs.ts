@@ -1,7 +1,7 @@
 // src/hooks/useFetchJenkinsJobs.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 export interface JenkinsJob {
   name: string;
@@ -9,6 +9,8 @@ export interface JenkinsJob {
 }
 
 const useFetchJenkinsJobs = () => {
+  const { API } = useApi();
+
   return useQuery<JenkinsJob[], Error>({
     queryKey: ["jenkinsJobs"],
     queryFn: async () => {

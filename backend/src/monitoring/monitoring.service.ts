@@ -13,7 +13,7 @@ export class MonitoringService {
       totalMemory: os.totalmem(),
       usedMemory: os.totalmem() - os.freemem(),
       uptime: os.uptime(),
-      diskUsage: this.getDiskUsage(), // Placeholder for actual disk usage
+      diskUsage: this.getDiskUsage(),
       networkInterfaces: os.networkInterfaces(),
     };
     return metrics;

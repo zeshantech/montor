@@ -1,7 +1,7 @@
 // src/hooks/useConnectRepo.ts
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface ConnectRepoData {
   repositoryUrl: string;
@@ -13,6 +13,7 @@ interface ConnectRepoResponse {
 }
 
 const useConnectRepo = () => {
+  const { API } = useApi();
   const queryClient = useQueryClient();
 
   return useMutation<

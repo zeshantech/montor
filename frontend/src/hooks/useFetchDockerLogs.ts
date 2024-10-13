@@ -1,9 +1,11 @@
 // src/hooks/useFetchDockerLogs.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 const useFetchDockerLogs = (containerId: string) => {
+  const { API } = useApi();
+
   return useQuery<string, Error>({
     queryKey: ["dockerLogs", containerId],
     queryFn: async () => {

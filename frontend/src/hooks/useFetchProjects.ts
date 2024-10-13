@@ -1,7 +1,7 @@
 // src/hooks/useFetchProjects.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 export interface Project {
   id: string;
@@ -12,6 +12,9 @@ export interface Project {
 }
 
 const useFetchProjects = () => {
+  const { API } = useApi();
+
+
   return useQuery<Project[], Error>({
     queryKey: ["projects"],
     queryFn: async () => {

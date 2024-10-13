@@ -19,8 +19,8 @@ import useFetchSystemLogs from '../hooks/useFetchSystemLogs';
 import useDeleteUser from '../hooks/useDeleteUser';
 
 const AdminDashboard = () => {
-  const { data: users, isLoading: isUsersLoading, isError: isUsersError } = useFetchUsers();
-  const { data: logs, isLoading: isLogsLoading, isError: isLogsError } = useFetchSystemLogs();
+  const { data: users } = useFetchUsers();
+  const { data: logs } = useFetchSystemLogs();
   const deleteUserMutation = useDeleteUser();
   const [searchTerm, setSearchTerm] = React.useState('');
 

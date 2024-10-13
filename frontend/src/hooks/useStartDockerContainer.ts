@@ -1,9 +1,10 @@
 // src/hooks/useStartDockerContainer.ts
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 const useStartDockerContainer = () => {
+  const { API } = useApi();
   const queryClient = useQueryClient();
 
   return useMutation({

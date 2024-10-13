@@ -10,21 +10,15 @@ import {
     Req,
   } from '@nestjs/common';
   import { ProjectsService } from './projects.service';
-  import { CreateProjectDto } from './dto/create-project.dto';
-  import { UpdateProjectDto } from './dto/update-project.dto';
-  import { ConnectRepoDto } from './dto/connect-repo.dto';
-  import { AuthGuard } from '@nestjs/passport';
-  import { RolesGuard } from '../auth/roles.guard';
-  import { Roles } from '../auth/roles.decorator';
-  import { UserRole } from '../users/user.entity';
+  import { CreateProjectDto, UpdateProjectDto, ConnectRepoDto } from './dto/project.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
   
   @Controller('projects')
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @UseGuards(AuthGuard)
   export class ProjectsController {
     constructor(private readonly projectsService: ProjectsService) {}
   
     @Post()
-    @Roles(UserRole.ADMIN, UserRole.USER)
     async create(
       @Body() createProjectDto: CreateProjectDto,
       @Req() req,
@@ -33,19 +27,16 @@ import {
     }
   
     @Get()
-    @Roles(UserRole.ADMIN, UserRole.USER)
     async findAll(@Req() req) {
       return this.projectsService.findAll(req.user);
     }
   
     @Get(':id')
-    @Roles(UserRole.ADMIN, UserRole.USER)
     async findOne(@Param('id') id: string, @Req() req) {
       return this.projectsService.findOne(+id, req.user);
     }
   
     @Put(':id')
-    @Roles(UserRole.ADMIN, UserRole.USER)
     async update(
       @Param('id') id: string,
       @Body() updateProjectDto: UpdateProjectDto,
@@ -55,14 +46,12 @@ import {
     }
   
     @Delete(':id')
-    @Roles(UserRole.ADMIN, UserRole.USER)
     async remove(@Param('id') id: string, @Req() req) {
       await this.projectsService.remove(+id, req.user);
       return { message: 'Project deleted successfully.' };
     }
   
     @Post(':id/connect-repo')
-    @Roles(UserRole.ADMIN, UserRole.USER)
     async connectRepository(
       @Param('id') id: string,
       @Body() connectRepoDto: ConnectRepoDto,

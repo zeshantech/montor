@@ -1,7 +1,7 @@
 // src/hooks/useUpdateProject.ts
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface UpdateProjectData {
   name?: string;
@@ -17,6 +17,7 @@ interface UpdateProjectResponse {
 }
 
 const useUpdateProject = () => {
+  const { API } = useApi();
   const queryClient = useQueryClient();
 
   return useMutation<

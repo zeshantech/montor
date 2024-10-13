@@ -1,16 +1,17 @@
 // src/hooks/useFetchUsers.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface User {
   id: string;
   name: string;
   email: string;
-  role: string;
 }
 
 const useFetchUsers = () => {
+  const { API } = useApi();
+
   return useQuery<User[], Error>({
     queryKey: ["users"],
     queryFn: async () => {

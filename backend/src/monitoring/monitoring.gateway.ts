@@ -10,7 +10,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import { MonitoringService } from './monitoring.service';
 import { Logger, Injectable } from '@nestjs/common';
-import { AuthService } from '../auth/auth.service';
 import { JwtService } from '@nestjs/jwt';
 
 @WebSocketGateway({

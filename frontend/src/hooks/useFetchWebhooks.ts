@@ -1,7 +1,7 @@
 // src/hooks/useFetchWebhooks.ts
 
 import { useQuery } from "@tanstack/react-query";
-import API from "../services/api";
+import { useApi } from "../services/api";
 
 interface Webhook {
   id: string;
@@ -12,6 +12,8 @@ interface Webhook {
 }
 
 const useFetchWebhooks = () => {
+  const { API } = useApi();
+
   return useQuery<Webhook[], Error>({
     queryKey: ["webhooks"],
     queryFn: async () => {

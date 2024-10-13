@@ -24,11 +24,6 @@ const Sidebar = () => {
         <Button as={NavLink} to="/settings" leftIcon={<FiSettings />} variant="ghost">
           Settings
         </Button>
-        {user?.role === 'ADMIN' && (
-          <Button as={NavLink} to="/admin" leftIcon={<FiShield />} variant="ghost">
-            Admin
-          </Button>
-        )}
         {/* Add more navigation buttons as needed */}
       </VStack>
     </Box>

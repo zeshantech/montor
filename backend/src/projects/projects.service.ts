@@ -9,14 +9,12 @@ import {
   import { InjectRepository } from '@nestjs/typeorm';
   import { Repository } from 'typeorm';
   import { Project } from './project.entity';
-  import { CreateProjectDto } from './dto/create-project.dto';
-  import { UpdateProjectDto } from './dto/update-project.dto';
-  import { ConnectRepoDto } from './dto/connect-repo.dto';
-  import { User, UserRole } from '../users/user.entity';
+  import { User } from '../users/user.entity';
   import { v4 as uuidv4 } from 'uuid';
   import axios from 'axios';
   import { ConfigService } from '@nestjs/config';
   import { NotificationsService } from '../notifications/notifications.service';
+import { ConnectRepoDto, CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
   
   @Injectable()
   export class ProjectsService {
@@ -24,7 +22,6 @@ import {
       @InjectRepository(Project)
       private projectsRepository: Repository<Project>,
       private configService: ConfigService,
-      private notificationsService: NotificationsService,
     ) {}
   
     // Create a new project
@@ -39,14 +36,9 @@ import {
       return this.projectsRepository.save(project);
     }
   
-    // Retrieve all projects based on user role
     async findAll(user: User): Promise<Project[]> {
-      if (user.role === UserRole.ADMIN) {
-        return this.projectsRepository.find({ relations: ['createdBy'] });
-      }
       return this.projectsRepository.find({
         where: { createdBy: user },
-        relations: ['createdBy'],
       });
     }
   
@@ -54,14 +46,11 @@ import {
     async findOne(id: number, user: User): Promise<Project> {
       const project = await this.projectsRepository.findOne({
         where: { id },
-        relations: ['createdBy'],
       });
       if (!project) {
         throw new NotFoundException('Project not found');
       }
-      if (user.role !== UserRole.ADMIN && project.createdBy.id !== user.id) {
-        throw new ForbiddenException('Access denied');
-      }
+      
       return project;
     }
   
