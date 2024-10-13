@@ -6,7 +6,7 @@ import axios from 'axios';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
-  private readonly logger = new Logger(LoggingMiddleware.name)
+  private readonly logger = new Logger(LoggingMiddleware.name);
   private readonly newRelicLogEndpoint = 'https://log-api.newrelic.com/log/v1';
   private readonly newRelicInsertKey = process.env.NEW_RELIC_LOG_INSERT_KEY;
 

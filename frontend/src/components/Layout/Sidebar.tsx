@@ -1,7 +1,4 @@
-// src/components/Layout/Sidebar.tsx
-
-import React from 'react';
-import { Box, VStack, Button, Text } from '@chakra-ui/react';
+import { Box, VStack, Button } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import { FiHome, FiUser, FiSettings, FiFolder, FiGithub, FiShield } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
@@ -10,7 +7,7 @@ const Sidebar = () => {
   const { user } = useAuth();
 
   return (
-    <Box bg="gray.100" w="200px" p={4} minH="100vh">
+    <Box w="200px" p={4} minH="100vh">
       <VStack spacing={4} align="stretch">
         <Button as={NavLink} to="/" leftIcon={<FiHome />} variant="ghost">
           Dashboard

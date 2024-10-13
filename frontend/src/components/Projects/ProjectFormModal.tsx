@@ -1,6 +1,4 @@
-// src/components/Projects/ProjectFormModal.tsx
-
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -9,15 +7,13 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  FormControl,
-  FormLabel,
-  Input,
-  Textarea,
   VStack,
-} from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
-import useCreateProject from '../../hooks/useCreateProject';
-import useUpdateProject from '../../hooks/useUpdateProject';
+} from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import useCreateProject from "../../hooks/useCreateProject";
+import useUpdateProject from "../../hooks/useUpdateProject";
+import InputField from "../UI/InputField";
+import TextareaField from "../UI/TextareaField";
 
 interface ProjectFormModalProps {
   isOpen: boolean;
@@ -30,8 +26,17 @@ interface FormData {
   description?: string;
 }
 
-const ProjectFormModal: React.FC<ProjectFormModalProps> = ({ isOpen, onClose, project }) => {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
+const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
+  isOpen,
+  onClose,
+  project,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>();
   const createProjectMutation = useCreateProject();
   const updateProjectMutation = useUpdateProject();
 
@@ -39,12 +44,12 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({ isOpen, onClose, pr
     if (project) {
       reset({
         name: project.name,
-        description: project.description || '',
+        description: project.description || "",
       });
     } else {
       reset({
-        name: '',
-        description: '',
+        name: "",
+        description: "",
       });
     }
   }, [project, reset]);
@@ -62,34 +67,39 @@ const ProjectFormModal: React.FC<ProjectFormModalProps> = ({ isOpen, onClose, pr
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>{project ? 'Edit Project' : 'Create Project'}</ModalHeader>
+        <ModalHeader>{project ? "Edit Project" : "Create Project"}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={handleSubmit(onSubmit)}>
             <VStack spacing={4}>
-              <FormControl id="name" isRequired>
-                <FormLabel>Project Name</FormLabel>
-                <Input
-                  type="text"
-                  placeholder="Enter project name"
-                  {...register('name', { required: 'Project name is required.' })}
-                />
-                {errors.name && <span style={{ color: 'red' }}>{errors.name.message}</span>}
-              </FormControl>
-              <FormControl id="description">
-                <FormLabel>Description</FormLabel>
-                <Textarea
-                  placeholder="Enter project description"
-                  {...register('description')}
-                />
-              </FormControl>
+              <InputField
+                aria-label="Project Name"
+                id="name"
+                label="Project Name"
+                placeholder="Enter project name"
+                error={errors.name}
+                register={register("name", {
+                  required: "Project name is required.",
+                })}
+              />
+              <TextareaField
+                aria-label="Description Name"
+                id="description"
+                label="Description"
+                placeholder="Enter project description"
+                register={register("description")}
+                error={errors.description}
+              />
               <Button
                 type="submit"
                 colorScheme="teal"
                 width="full"
-                isLoading={createProjectMutation.isPending || updateProjectMutation.isPending}
+                isLoading={
+                  createProjectMutation.isPending ||
+                  updateProjectMutation.isPending
+                }
               >
-                {project ? 'Update Project' : 'Create Project'}
+                {project ? "Update Project" : "Create Project"}
               </Button>
             </VStack>
           </form>
