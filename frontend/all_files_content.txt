@@ -1,0 +1,3564 @@
+// ./all_files_content.txt
+
+
+
+// ./analyzer.sh
+#!/bin/bash
+
+output_file="all_files_content.txt"
+
+> "$output_file"
+
+function append_file_contents() {
+    local dir="$1"
+
+    for entry in "$dir"/*; do
+        if [ -d "$entry" ]; then
+            append_file_contents "$entry"
+        elif [ -f "$entry" ]; then
+            echo "// ${entry#$PWD/}" >> "$output_file"
+            cat "$entry" >> "$output_file"
+            echo -e "\n\n" >> "$output_file"
+        fi
+    done
+}
+
+append_file_contents "."
+
+echo "All file contents have been written to $output_file."
+
+
+// ./api-thats-using.md
+- **POST**: `/api/auth/login` //
+- **POST**: `/api/auth/register` //
+- **GET**: `/api/users/profile` //
+- **PUT**: `/api/users/profile` //
+- **POST**: `/api/users/change-password` //
+- **GET**: `/api/projects` // 
+- **POST**: `/api/projects` //
+- **PUT**: `/api/projects/:id` //
+- **GET**: `/api/projects/:id` //
+- **DELETE**: `/api/projects/:id` //
+- **POST**: `/api/projects/:id/connect-repo` //
+- **GET**: `/api/jenkins/jobs` //
+- **POST**: `/api/jenkins/trigger/:jobName` //
+- **GET**: `/api/jenkins/jobs/:jobName/status` //
+- **GET**: `/api/cicd/:projectId/events` //
+- **GET**: `/api/cicd/workflow-runs` //
+- **POST**: `/api/cicd/workflow/:workflowName/trigger` //
+- **GET**: `/api/cicd/workflow/:workflowId/status` //
+- **GET**: `/api/webhooks/github` //
+- **GET**: `/api/docker/containers` //
+- **POST**: `/api/docker/containers/:id/start` //
+- **POST**: `/api/docker/containers/:id/stop` //
+- **DELETE**: `/api/docker/containers/:id` //
+- **GET**: `/api/docker/containers/:id/logs` //
+- **GET**: `/api/users` //
+- **DELETE**: `/api/users/:id` //
+- **GET**: `/api/system/logs` //
+- **GET**: `/api/monitoring/system` //
+
+REALTIME
+- **Event**: `jenkinsJobUpdate` //
+- **Event**: `dockerContainerUpdate` //
+
+
+// ./index.html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + React + TS</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
+
+
+// ./package.json
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@chakra-ui/icons": "^2.2.4",
+    "@chakra-ui/react": "^2.10.1",
+    "@emotion/react": "^11.13.3",
+    "@emotion/styled": "^11.13.0",
+    "@tanstack/react-query": "^5.59.3",
+    "axios": "^1.7.7",
+    "framer-motion": "^11.11.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.53.0",
+    "react-icons": "^5.3.0",
+    "react-router-dom": "^6.26.2",
+    "react-toastify": "^10.0.5",
+    "socket.io-client": "^4.8.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/react-toastify": "^4.1.0",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "eslint": "^9.11.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "globals": "^15.9.0",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.7.0",
+    "vite": "^5.4.8"
+  }
+}
+
+
+
+// ./public/vite.svg
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--logos" width="31.88" height="32" preserveAspectRatio="xMidYMid meet" viewBox="0 0 256 257"><defs><linearGradient id="IconifyId1813088fe1fbc01fb466" x1="-.828%" x2="57.636%" y1="7.652%" y2="78.411%"><stop offset="0%" stop-color="#41D1FF"></stop><stop offset="100%" stop-color="#BD34FE"></stop></linearGradient><linearGradient id="IconifyId1813088fe1fbc01fb467" x1="43.376%" x2="50.316%" y1="2.242%" y2="89.03%"><stop offset="0%" stop-color="#FFEA83"></stop><stop offset="8.333%" stop-color="#FFDD35"></stop><stop offset="100%" stop-color="#FFA800"></stop></linearGradient></defs><path fill="url(#IconifyId1813088fe1fbc01fb466)" d="M255.153 37.938L134.897 252.976c-2.483 4.44-8.862 4.466-11.382.048L.875 37.958c-2.746-4.814 1.371-10.646 6.827-9.67l120.385 21.517a6.537 6.537 0 0 0 2.322-.004l117.867-21.483c5.438-.991 9.574 4.796 6.877 9.62Z"></path><path fill="url(#IconifyId1813088fe1fbc01fb467)" d="M185.432.063L96.44 17.501a3.268 3.268 0 0 0-2.634 3.014l-5.474 92.456a3.268 3.268 0 0 0 3.997 3.378l24.777-5.718c2.318-.535 4.413 1.507 3.936 3.838l-7.361 36.047c-.495 2.426 1.782 4.5 4.151 3.78l15.304-4.649c2.372-.72 4.652 1.36 4.15 3.788l-11.698 56.621c-.732 3.542 3.979 5.473 5.943 2.437l1.313-2.028l72.516-144.72c1.215-2.423-.88-5.186-3.54-4.672l-25.505 4.922c-2.396.462-4.435-1.77-3.759-4.114l16.646-57.705c.677-2.35-1.37-4.583-3.769-4.113Z"></path></svg>
+
+
+// ./src/App.tsx
+// src/App.tsx
+
+import React from "react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+import AuthProvider from "./contexts/AuthContext";
+import SocketProvider from "./contexts/SocketContext";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import theme from "./theme";
+import NotificationsProvider from "./contexts/NotificationsContext";
+import NotificationsCenter from "./components/Notifications/NotificationsCenter";
+
+const queryClient = new QueryClient();
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <ChakraProvider theme={theme}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <SocketProvider>
+              <NotificationsProvider>
+                <AppRoutes />
+                <NotificationsCenter />
+                <ToastContainer />
+              </NotificationsProvider>
+            </SocketProvider>
+          </AuthProvider>
+        </QueryClientProvider>
+      </ChakraProvider>
+    </BrowserRouter>
+  );
+};
+
+export default App;
+
+
+
+// ./src/components/CI_CD/CICDEvents.tsx
+// src/components/CI_CD/CICDEvents.tsx
+
+import React from 'react';
+import {
+  Box,
+  Heading,
+  List,
+  ListItem,
+  ListIcon,
+  Spinner,
+  Center,
+  Alert,
+  AlertIcon,
+  Text,
+} from '@chakra-ui/react';
+import { FiActivity } from 'react-icons/fi';
+import { useParams } from 'react-router-dom';
+import useFetchCICDEvents, { CICDEvent } from '../../hooks/useFetchCICDEvents';
+
+const CICDEvents = () => {
+  const { id } = useParams<{ id: string }>();
+  const { data: events, isLoading, isError } = useFetchCICDEvents(id || '');
+
+  if (isLoading) {
+    return (
+      <Center>
+        <Spinner size="lg" />
+      </Center>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Alert status="error">
+        <AlertIcon />
+        Failed to load CI_CD events.
+      </Alert>
+    );
+  }
+
+  return (
+    <Box>
+      <Heading size="md" mb={4}>
+        CI_CD Events
+      </Heading>
+      {events && events.length > 0 ? (
+        <List spacing={3}>
+          {events.map((event: CICDEvent) => (
+            <ListItem key={event.id}>
+              <ListIcon as={FiActivity} color="teal.500" />
+              <Text><strong>Type:</strong> {event.eventType}</Text>
+              <Text><strong>Timestamp:</strong> {new Date(event.timestamp).toLocaleString()}</Text>
+              <Text><strong>Details:</strong> {event.details}</Text>
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <Text>No CI_CD events found for this project.</Text>
+      )}
+    </Box>
+  );
+};
+
+export default CICDEvents;
+
+
+
+// ./src/components/CI_CD/WorkflowRuns.tsx
+import {
+    Box,
+    Heading,
+    List,
+    ListItem,
+    Spinner,
+    Center,
+    Text,
+    Alert,
+    AlertIcon,
+    Progress,
+    VStack,
+} from '@chakra-ui/react';
+import useFetchWorkflowRuns from '../../hooks/useFetchWorkflowRuns';
+
+const WorkflowRuns = () => {
+    const { data: runs, isLoading, isError } = useFetchWorkflowRuns();
+
+    if (isLoading) {
+        return (
+            <Center>
+                <Spinner size="lg" />
+            </Center>
+        );
+    }
+
+    if (isError) {
+        return (
+            <Alert status="error">
+                <AlertIcon />
+                Failed to load workflow runs.
+            </Alert>
+        );
+    }
+
+    return (
+        <Box>
+            <Heading size="md" mb={4}>
+                Workflow Runs
+            </Heading>
+            {runs && runs.length > 0 ? (
+                <List spacing={3}>
+                    {runs.map((run) => (
+                        <ListItem key={run.id} borderWidth={1} borderRadius="md" p={4}>
+                            <VStack align="start" spacing={2}>
+                                <VStack align="start">
+                                    <Text fontWeight="bold">{`Workflow ID: ${run.id}`}</Text>
+                                    <Text color="gray.500">{`Status: ${run.status}`}</Text>
+                                </VStack>
+                                <Progress value={/*run.progress*/10} size="sm" colorScheme="green" borderRadius="md" />
+                                <Box>
+                                    <strong>Started At:</strong> {new Date(run.startedAt).toLocaleString()}
+                                </Box>
+                                <Box>
+                                    <strong>Completed At:</strong> {run.completedAt ? new Date(run.completedAt).toLocaleString() : 'In Progress'}
+                                </Box>
+                            </VStack>
+                        </ListItem>
+                    ))}
+                </List>
+            ) : (
+                <Center>No workflow runs found.</Center>
+            )}
+        </Box>
+    );
+};
+
+export default WorkflowRuns;
+
+
+
+// ./src/components/Layout/Header.tsx
+// src/components/Layout/Header.tsx
+
+import React from "react";
+import { Box, Flex, Heading, Spacer, Button } from "@chakra-ui/react";
+import { useAuth } from "../../hooks/useAuth";
+import ColorModeSwitcher from "../UI/ColorModeSwitcher";
+
+const Header = () => {
+  const { isAuthenticated, logout } = useAuth();
+
+  return (
+    <Box as="header" bg="teal.500" px={4} py={2} color="white">
+      <Flex alignItems="center">
+        <Heading size="md">DevOps Dashboard</Heading>
+        <Spacer />
+        {isAuthenticated && (
+          <Button colorScheme="teal" variant="outline" onClick={logout}>
+            Logout
+          </Button>
+        )}
+        <ColorModeSwitcher />
+      </Flex>
+    </Box>
+  );
+};
+
+export default Header;
+
+
+
+// ./src/components/Layout/Sidebar.tsx
+import { Box, VStack, Button } from '@chakra-ui/react';
+import { NavLink } from 'react-router-dom';
+import { FiHome, FiUser, FiSettings, FiFolder, FiGithub, FiShield } from 'react-icons/fi';
+import { useAuth } from '../../hooks/useAuth';
+
+const Sidebar = () => {
+  const { user } = useAuth();
+
+  return (
+    <Box w="200px" p={4} minH="100vh">
+      <VStack spacing={4} align="stretch">
+        <Button as={NavLink} to="/" leftIcon={<FiHome />} variant="ghost">
+          Dashboard
+        </Button>
+        <Button as={NavLink} to="/projects" leftIcon={<FiFolder />} variant="ghost">
+          Projects
+        </Button>
+        <Button as={NavLink} to="/webhooks" leftIcon={<FiGithub />} variant="ghost">
+          Webhooks
+        </Button>
+        <Button as={NavLink} to="/profile" leftIcon={<FiUser />} variant="ghost">
+          Profile
+        </Button>
+        <Button as={NavLink} to="/settings" leftIcon={<FiSettings />} variant="ghost">
+          Settings
+        </Button>
+        {user?.role === 'ADMIN' && (
+          <Button as={NavLink} to="/admin" leftIcon={<FiShield />} variant="ghost">
+            Admin
+          </Button>
+        )}
+        {/* Add more navigation buttons as needed */}
+      </VStack>
+    </Box>
+  );
+};
+
+export default Sidebar;
+
+
+
+// ./src/components/Notifications/NotificationsCenter.tsx
+import {
+  Box,
+  VStack,
+  HStack,
+  Text,
+  CloseButton,
+  Icon,
+  Badge,
+} from '@chakra-ui/react';
+import { FiInfo, FiCheckCircle, FiAlertTriangle, FiXCircle } from 'react-icons/fi';
+import { useNotifications } from '../../contexts/NotificationsContext';
+import { memo } from 'react';
+
+const iconMap = {
+  info: FiInfo,
+  success: FiCheckCircle,
+  warning: FiAlertTriangle,
+  error: FiXCircle,
+};
+
+const NotificationsCenter = () => {
+  const { notifications, removeNotification } = useNotifications();
+
+  return (
+    <Box position="fixed" top="4" right="4" zIndex="1000">
+      <VStack spacing={2} align="flex-end">
+        {notifications.map((notif) => (
+          <Box
+            key={notif.id}
+            bg="white"
+            boxShadow="md"
+            borderRadius="md"
+            p={3}
+            minW="300px"
+            maxW="350px"
+            borderLeftWidth="4px"
+            borderColor={`${notif.type}.400`}
+          >
+            <HStack justifyContent="space-between">
+              <HStack>
+                <Icon as={iconMap[notif.type]} color={`${notif.type}.500`} />
+                <Text fontSize="sm">{notif.message}</Text>
+              </HStack>
+              <CloseButton size="sm" onClick={() => removeNotification(notif.id)} />
+            </HStack>
+            <Badge mt={2} colorScheme="gray">
+              {notif.timestamp.toLocaleTimeString()}
+            </Badge>
+          </Box>
+        ))}
+      </VStack>
+    </Box>
+  );
+};
+
+export default memo(NotificationsCenter);
+
+
+
+// ./src/components/Projects/ConnectRepoModal.tsx
+// src/components/Projects/ConnectRepoModal.tsx
+
+import React, { useEffect } from 'react';
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  VStack,
+} from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import useConnectRepo from '../../hooks/useConnectRepo';
+
+interface ConnectRepoModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  projectId: string;
+}
+
+interface FormData {
+  repositoryUrl: string;
+}
+
+const ConnectRepoModal: React.FC<ConnectRepoModalProps> = ({ isOpen, onClose, projectId }) => {
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
+  const connectRepoMutation = useConnectRepo();
+
+  useEffect(() => {
+    if (!isOpen) {
+      reset({
+        repositoryUrl: '',
+      });
+    }
+  }, [isOpen, reset]);
+
+  const onSubmit = (data: FormData) => {
+    connectRepoMutation.mutate({ projectId, data });
+    onClose();
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Connect Repository</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <VStack spacing={4}>
+              <FormControl id="repositoryUrl" isRequired>
+                <FormLabel>Repository URL</FormLabel>
+                <Input
+                  type="url"
+                  placeholder="https://github.com/username/repo.git"
+                  {...register('repositoryUrl', {
+                    required: 'Repository URL is required.',
+                    pattern: {
+                      value: /^(https?:\/\/)?(www\.)?github\.com\/[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+(\.git)?$/,
+                      message: 'Enter a valid GitHub repository URL.',
+                    },
+                  })}
+                />
+                {errors.repositoryUrl && <span style={{ color: 'red' }}>{errors.repositoryUrl.message}</span>}
+              </FormControl>
+              <Button
+                type="submit"
+                colorScheme="teal"
+                width="full"
+                isLoading={connectRepoMutation.isPending}
+              >
+                Connect
+              </Button>
+            </VStack>
+          </form>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default ConnectRepoModal;
+
+
+
+// ./src/components/Projects/ProjectDetail.tsx
+// src/components/Projects/ProjectDetail.tsx
+
+import React, { useState } from 'react';
+import {
+  Box,
+  Heading,
+  Text,
+  Button,
+  Spinner,
+  Center,
+  Alert,
+  AlertIcon,
+  VStack,
+} from '@chakra-ui/react';
+import { useParams, useNavigate } from 'react-router-dom';
+import useFetchProject from '../../hooks/useFetchProject';
+import useUpdateProject from '../../hooks/useUpdateProject';
+import useConnectRepo from '../../hooks/useConnectRepo';
+import ProjectFormModal from './ProjectFormModal';
+import ConnectRepoModal from './ConnectRepoModal.tsx';
+
+const ProjectDetail = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const { data: project, isLoading, isError } = useFetchProject(id || '');
+  const updateProjectMutation = useUpdateProject();
+  const connectRepoMutation = useConnectRepo();
+
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isConnectRepoModalOpen, setIsConnectRepoModalOpen] = useState(false);
+
+  if (isLoading) {
+    return (
+      <Center h="100%">
+        <Spinner size="lg" />
+      </Center>
+    );
+  }
+
+  if (isError || !project) {
+    return (
+      <Center h="100%">
+        <Alert status="error">
+          <AlertIcon />
+          Failed to load project details.
+        </Alert>
+      </Center>
+    );
+  }
+
+  return (
+    <Box p={6}>
+      <VStack align="start" spacing={4}>
+        <Heading>{project.name}</Heading>
+        <Text>{project.description || 'No description provided.'}</Text>
+        <Text>
+          <strong>Created At:</strong> {new Date(project.createdAt).toLocaleString()}
+        </Text>
+        <Text>
+          <strong>Updated At:</strong> {new Date(project.updatedAt).toLocaleString()}
+        </Text>
+        <Button colorScheme="yellow" onClick={() => setIsEditModalOpen(true)}>
+          Edit Project
+        </Button>
+        <Button colorScheme="blue" onClick={() => setIsConnectRepoModalOpen(true)}>
+          Connect Repository
+        </Button>
+        <Button colorScheme="red" onClick={() => navigate(-1)}>
+          Back to Projects
+        </Button>
+      </VStack>
+
+      {/* Edit Project Modal */}
+      <ProjectFormModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        project={project}
+      />
+
+      {/* Connect Repository Modal */}
+      <ConnectRepoModal
+        isOpen={isConnectRepoModalOpen}
+        onClose={() => setIsConnectRepoModalOpen(false)}
+        projectId={project.id}
+      />
+    </Box>
+  );
+};
+
+export default ProjectDetail;
+
+
+
+// ./src/components/Projects/ProjectFormModal.tsx
+import React, { useEffect } from "react";
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  VStack,
+} from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import useCreateProject from "../../hooks/useCreateProject";
+import useUpdateProject from "../../hooks/useUpdateProject";
+import InputField from "../UI/InputField";
+import TextareaField from "../UI/TextareaField";
+
+interface ProjectFormModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  project: any | null;
+}
+
+interface FormData {
+  name: string;
+  description?: string;
+}
+
+const ProjectFormModal: React.FC<ProjectFormModalProps> = ({
+  isOpen,
+  onClose,
+  project,
+}) => {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>();
+  const createProjectMutation = useCreateProject();
+  const updateProjectMutation = useUpdateProject();
+
+  useEffect(() => {
+    if (project) {
+      reset({
+        name: project.name,
+        description: project.description || "",
+      });
+    } else {
+      reset({
+        name: "",
+        description: "",
+      });
+    }
+  }, [project, reset]);
+
+  const onSubmit = (data: FormData) => {
+    if (project) {
+      updateProjectMutation.mutate({ id: project.id, data });
+    } else {
+      createProjectMutation.mutate(data);
+    }
+    onClose();
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>{project ? "Edit Project" : "Create Project"}</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <VStack spacing={4}>
+              <InputField
+                aria-label="Project Name"
+                id="name"
+                label="Project Name"
+                placeholder="Enter project name"
+                error={errors.name}
+                register={register("name", {
+                  required: "Project name is required.",
+                })}
+              />
+              <TextareaField
+                aria-label="Description Name"
+                id="description"
+                label="Description"
+                placeholder="Enter project description"
+                register={register("description")}
+                error={errors.description}
+              />
+              <Button
+                type="submit"
+                colorScheme="teal"
+                width="full"
+                isLoading={
+                  createProjectMutation.isPending ||
+                  updateProjectMutation.isPending
+                }
+              >
+                {project ? "Update Project" : "Create Project"}
+              </Button>
+            </VStack>
+          </form>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default ProjectFormModal;
+
+
+
+// ./src/components/Projects/ProjectList.tsx
+// src/components/Projects/ProjectList.tsx
+
+import { useState, useMemo } from "react";
+import {
+  Box,
+  Button,
+  Heading,
+  List,
+  ListItem,
+  Text,
+  Spinner,
+  Center,
+  Alert,
+  AlertIcon,
+  HStack,
+  Input,
+  VStack,
+} from "@chakra-ui/react";
+import { FiPlus, FiEdit, FiTrash2, FiSearch } from "react-icons/fi";
+import useFetchProjects, { Project } from "../../hooks/useFetchProjects";
+import useDeleteProject from "../../hooks/useDeleteProject";
+import ProjectFormModal from "./ProjectFormModal";
+
+const ProjectList = () => {
+  const { data: projects, isLoading, isError } = useFetchProjects();
+  const deleteProjectMutation = useDeleteProject();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleDelete = (id: string) => {
+    if (window.confirm("Are you sure you want to delete this project?")) {
+      deleteProjectMutation.mutate(id);
+    }
+  };
+
+  const handleEdit = (project: Project) => {
+    setEditingProject(project);
+    setIsModalOpen(true);
+  };
+
+  const handleCreate = () => {
+    setEditingProject(null);
+    setIsModalOpen(true);
+  };
+
+  const filteredProjects = useMemo(() => {
+    if (!projects) return [];
+    return projects.filter(
+      (project) =>
+        project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (project.description &&
+          project.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  }, [projects, searchTerm]);
+
+  return (
+    <Box>
+      <HStack justifyContent="space-between" mb={4}>
+        <Heading size="md">Projects</Heading>
+        <Button leftIcon={<FiPlus />} colorScheme="teal" onClick={handleCreate}>
+          Create Project
+        </Button>
+      </HStack>
+      {/* Search Bar */}
+      <HStack mb={4}>
+        <Input
+          placeholder="Search Projects..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          size="sm"
+        />
+        <Button leftIcon={<FiSearch />} onClick={() => {}}>
+          Search
+        </Button>
+      </HStack>
+      {isLoading && (
+        <Center>
+          <Spinner size="lg" />
+        </Center>
+      )}
+      {isError && (
+        <Alert status="error">
+          <AlertIcon />
+          Failed to load projects.
+        </Alert>
+      )}
+      {!isLoading && !isError && (
+        <List spacing={3}>
+          {filteredProjects && filteredProjects.length > 0 ? (
+            filteredProjects.map((project) => (
+              <ListItem
+                key={project.id}
+                borderWidth={1}
+                borderRadius="md"
+                p={4}
+              >
+                <HStack justifyContent="space-between">
+                  <VStack align="start">
+                    <Text fontWeight="bold">{project.name}</Text>
+                    <Text color="gray.500">
+                      {project.description || "No description provided."}
+                    </Text>
+                  </VStack>
+                  <HStack spacing={2}>
+                    <Button
+                      size="sm"
+                      colorScheme="yellow"
+                      leftIcon={<FiEdit />}
+                      onClick={() => handleEdit(project)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      colorScheme="red"
+                      leftIcon={<FiTrash2 />}
+                      onClick={() => handleDelete(project.id)}
+                      isLoading={
+                        deleteProjectMutation.isPending &&
+                        deleteProjectMutation.variables === project.id
+                      }
+                    >
+                      Delete
+                    </Button>
+                  </HStack>
+                </HStack>
+              </ListItem>
+            ))
+          ) : (
+            <Center>No projects found.</Center>
+          )}
+        </List>
+      )}
+      {/* Project Form Modal */}
+      <ProjectFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        project={editingProject}
+      />
+    </Box>
+  );
+};
+
+export default ProjectList;
+
+
+
+// ./src/components/ProtectedRoute.tsx
+// src/components/ProtectedRoute.tsx
+
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+
+interface ProtectedRouteProps {
+  children: JSX.Element;
+}
+
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+export default ProtectedRoute;
+
+
+
+// ./src/components/UI/Button.tsx
+// src/components/UI/Button.tsx
+
+import React from 'react';
+import { Button as ChakraButton, ButtonProps } from '@chakra-ui/react';
+
+const Button: React.FC<ButtonProps> = ({ children, ...props }) => {
+  return (
+    <ChakraButton {...props}>
+      {children}
+    </ChakraButton>
+  );
+};
+
+export default Button;
+
+
+
+// ./src/components/UI/ColorModeSwitcher.tsx
+// src/components/UI/ColorModeSwitcher.tsx
+
+import React from 'react';
+import { IconButton, useColorMode } from '@chakra-ui/react';
+import { SunIcon, MoonIcon } from '@chakra-ui/icons';
+
+const ColorModeSwitcher: React.FC = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  return (
+    <IconButton
+      aria-label="Toggle color mode"
+      icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+      onClick={toggleColorMode}
+      variant="ghost"
+    />
+  );
+};
+
+export default ColorModeSwitcher;
+
+
+
+// ./src/components/UI/InputField.tsx
+// src/components/UI/InputField.tsx
+
+import React from "react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  InputProps,
+} from "@chakra-ui/react";
+import { FieldError, FieldValues, Path, UseFormRegisterReturn } from "react-hook-form";
+
+export interface InputFieldProps<T extends FieldValues> extends InputProps {
+  id: string;
+  label: string;
+  error?: FieldError;
+  register: UseFormRegisterReturn<Path<T>>;
+}
+
+const InputField = <T extends FieldValues>({
+  id,
+  label,
+  error,
+  register,
+  ...restProps
+}: InputFieldProps<T>) => {
+  return (
+    <FormControl id={id} isInvalid={!!error} isRequired>
+      <FormLabel>{label}</FormLabel>
+      <Input {...register} {...restProps} />
+      {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
+    </FormControl>
+  );
+};
+
+export default React.memo(InputField);
+
+
+
+// ./src/components/UI/TextareaField.tsx
+// src/components/UI/TextareaField.tsx
+
+import React from "react";
+import {
+  FormControl,
+  FormLabel,
+  Textarea,
+  FormErrorMessage,
+  TextareaProps,
+} from "@chakra-ui/react";
+import { FieldError, FieldValues, Path, UseFormRegisterReturn } from "react-hook-form";
+
+export interface TextareaFieldProps<T extends FieldValues> extends TextareaProps {
+  id: string;
+  label: string;
+  error?: FieldError;
+  register: UseFormRegisterReturn<Path<T>>;
+}
+
+const TextareaField = <T extends FieldValues>({
+  id,
+  label,
+  error,
+  register,
+  ...restProps
+}: TextareaFieldProps<T>) => {
+  return (
+    <FormControl id={id} isInvalid={!!error} isRequired>
+      <FormLabel>{label}</FormLabel>
+      <Textarea {...register} {...restProps} />
+      {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
+    </FormControl>
+  );
+};
+
+export default React.memo(TextareaField);
+
+
+
+// ./src/components/Widgets/DockerContainersWidget.tsx
+import { useState } from 'react';
+import {
+    Card,
+    CardHeader,
+    CardBody,
+    Heading,
+    List,
+    ListItem,
+    Button,
+    Spinner,
+    Center,
+    Alert,
+    AlertIcon,
+    HStack,
+    Box,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+    Text,
+    VStack,
+} from '@chakra-ui/react';
+import { FiLogIn, FiRefreshCw } from 'react-icons/fi';
+import useFetchDockerContainers, { DockerContainer } from '../../hooks/useFetchDockerContainers';
+import useStartDockerContainer from '../../hooks/useStartDockerContainer';
+import useStopDockerContainer from '../../hooks/useStopDockerContainer';
+import useRemoveDockerContainer from '../../hooks/useRemoveDockerContainer';
+import useFetchDockerLogs from '../../hooks/useFetchDockerLogs';
+import useDockerRealTimeUpdates from '../../hooks/useDockerRealTimeUpdates';
+import { toast } from 'react-toastify';
+
+const DockerContainersWidget = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [selectedContainerId, setSelectedContainerId] = useState<string | null>(null);
+    const { data, isLoading, isError, refetch } = useFetchDockerContainers();
+    const startMutation = useStartDockerContainer();
+    const stopMutation = useStopDockerContainer();
+    const removeMutation = useRemoveDockerContainer();
+    const { data: logs, isLoading: isLogsLoading, isError: isLogsError } = useFetchDockerLogs(selectedContainerId || '');
+
+    // Initialize real-time updates
+    useDockerRealTimeUpdates();
+
+    const handleStart = (id: string) => {
+        startMutation.mutate(id, {
+            onSuccess: () => {
+                toast.success(`Container started successfully.`);
+            },
+            onError: () => {
+                toast.error(`Failed to start the container.`);
+            },
+        });
+    };
+
+    const handleStop = (id: string) => {
+        stopMutation.mutate(id, {
+            onSuccess: () => {
+                toast.success(`Container stopped successfully.`);
+            },
+            onError: () => {
+                toast.error(`Failed to stop the container.`);
+            },
+        });
+    };
+
+    const handleRemove = (id: string) => {
+        if (window.confirm('Are you sure you want to remove this container?')) {
+            removeMutation.mutate(id, {
+                onSuccess: () => {
+                    toast.success(`Container removed successfully.`);
+                },
+                onError: () => {
+                    toast.error(`Failed to remove the container.`);
+                },
+            });
+        }
+    };
+
+    const handleViewLogs = (id: string) => {
+        setSelectedContainerId(id);
+        onOpen();
+    };
+
+    return (
+        <Card>
+            <CardHeader display="flex" justifyContent="space-between" alignItems="center">
+                <Heading size="md">Docker Containers</Heading>
+                <Button leftIcon={<FiRefreshCw />} onClick={() => refetch()}>
+                    Refresh
+                </Button>
+            </CardHeader>
+            <CardBody>
+                {isLoading && (
+                    <Center>
+                        <Spinner size="lg" />
+                    </Center>
+                )}
+                {isError && (
+                    <Alert status="error">
+                        <AlertIcon />
+                        Failed to load Docker containers.
+                    </Alert>
+                )}
+                {!isLoading && !isError && (
+                    <List spacing={3}>
+                        {data && data.length > 0 ? (
+                            data.map((container: DockerContainer) => (
+                                <ListItem key={container.Id} display="flex" justifyContent="space-between" alignItems="center">
+                                    <VStack align="start">
+                                        <Text fontWeight="bold">{container.Names[0]}</Text>
+                                        <Text color="gray.500">{`Status: ${container.Status}`}</Text>
+                                    </VStack>
+                                    <HStack spacing={2}>
+                                        <Button
+                                            colorScheme="green"
+                                            size="sm"
+                                            onClick={() => handleStart(container.Id)}
+                                            isLoading={startMutation.isPending && startMutation.variables === container.Id}
+                                            disabled={container.State === 'running'}
+                                        >
+                                            Start
+                                        </Button>
+                                        <Button
+                                            colorScheme="yellow"
+                                            size="sm"
+                                            onClick={() => handleStop(container.Id)}
+                                            isLoading={stopMutation.isPending && stopMutation.variables === container.Id}
+                                            disabled={container.State !== 'running'}
+                                        >
+                                            Stop
+                                        </Button>
+                                        <Button
+                                            colorScheme="red"
+                                            size="sm"
+                                            onClick={() => handleRemove(container.Id)}
+                                            isLoading={removeMutation.isPending && removeMutation.variables === container.Id}
+                                        >
+                                            Remove
+                                        </Button>
+                                        <Button
+                                            colorScheme="blue"
+                                            size="sm"
+                                            onClick={() => handleViewLogs(container.Id)}
+                                            leftIcon={<FiLogIn />}
+                                        >
+                                            Logs
+                                        </Button>
+                                    </HStack>
+                                </ListItem>
+                            ))
+                        ) : (
+                            <Center>No Docker containers found.</Center>
+                        )}
+                    </List>
+                )}
+            </CardBody>
+
+            {/* Logs Modal */}
+            <Modal isOpen={isOpen} onClose={onClose} size="xl">
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Container Logs</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        {isLogsLoading ? (
+                            <Center>
+                                <Spinner size="lg" />
+                            </Center>
+                        ) : isLogsError ? (
+                            <Alert status="error">
+                                <AlertIcon />
+                                Failed to load logs for this container.
+                            </Alert>
+                        ) : logs ? (
+                            <Box
+                                as="pre"
+                                bg="gray.800"
+                                color="white"
+                                p={4}
+                                borderRadius="md"
+                                overflowX="auto"
+                                maxH="60vh"
+                            >
+                                {logs}
+                            </Box>
+                        ) : (
+                            <Text>No logs available.</Text>
+                        )}
+                    </ModalBody>
+                </ModalContent>
+            </Modal>
+        </Card>
+    );
+};
+
+export default DockerContainersWidget;
+
+
+
+// ./src/components/Widgets/JenkinsJobsWidget.tsx
+// src/components/Widgets/JenkinsJobsWidget.tsx
+
+import React from 'react';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Heading,
+  List,
+  ListItem,
+  Button,
+  Spinner,
+  Center,
+  Alert,
+  AlertIcon,
+  HStack,
+  Text,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/react';
+import { FiRefreshCw } from 'react-icons/fi';
+import useFetchJenkinsJobs, { JenkinsJob } from '../../hooks/useFetchJenkinsJobs';
+import useTriggerJenkinsJob from '../../hooks/useTriggerJenkinsJob';
+import useFetchJenkinsJobStatus from '../../hooks/useFetchJenkinsJobStatus';
+import useJenkinsRealTimeUpdates from '../../hooks/useJenkinsRealTimeUpdates';
+import { toast } from 'react-toastify';
+
+const JenkinsJobsWidget = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [selectedJob, setSelectedJob] = React.useState<string | null>(null);
+  const { data, isLoading, isError, refetch } = useFetchJenkinsJobs();
+  const triggerJobMutation = useTriggerJenkinsJob();
+  const { data: jobStatus, isLoading: isStatusLoading, isError: isStatusError } = useFetchJenkinsJobStatus(selectedJob || '');
+
+  // Initialize real-time updates
+  useJenkinsRealTimeUpdates();
+
+  const handleTrigger = (jobName: string) => {
+    triggerJobMutation.mutate(jobName, {
+      onSuccess: () => {
+        toast.success(`Job "${jobName}" triggered successfully.`);
+      },
+      onError: () => {
+        toast.error(`Failed to trigger job "${jobName}".`);
+      },
+    });
+  };
+
+  const handleViewStatus = (jobName: string) => {
+    setSelectedJob(jobName);
+    onOpen();
+  };
+
+  return (
+    <Card>
+      <CardHeader display="flex" justifyContent="space-between" alignItems="center">
+        <Heading size="md">Jenkins Jobs</Heading>
+        <Button leftIcon={<FiRefreshCw />} onClick={() => refetch()}>
+          Refresh
+        </Button>
+      </CardHeader>
+      <CardBody>
+        {isLoading && (
+          <Center>
+            <Spinner size="lg" />
+          </Center>
+        )}
+        {isError && (
+          <Alert status="error">
+            <AlertIcon />
+            Failed to load Jenkins jobs.
+          </Alert>
+        )}
+        {!isLoading && !isError && (
+          <List spacing={3}>
+            {data && data.length > 0 ? (
+              data.map((job: JenkinsJob) => (
+                <ListItem key={job.name} display="flex" justifyContent="space-between" alignItems="center">
+                  <VStack align="start">
+                    <Text fontWeight="bold">{job.name}</Text>
+                    <Text color="gray.500">{`Status: ${job.color.replace(/_/g, ' ')}`}</Text>
+                  </VStack>
+                  <HStack spacing={2}>
+                    <Button
+                      colorScheme="teal"
+                      size="sm"
+                      onClick={() => handleTrigger(job.name)}
+                      isLoading={triggerJobMutation.isPending && triggerJobMutation.variables === job.name}
+                    >
+                      Trigger
+                    </Button>
+                    <Button
+                      colorScheme="blue"
+                      size="sm"
+                      onClick={() => handleViewStatus(job.name)}
+                    >
+                      Status
+                    </Button>
+                  </HStack>
+                </ListItem>
+              ))
+            ) : (
+              <Center>No Jenkins jobs found.</Center>
+            )}
+          </List>
+        )}
+      </CardBody>
+
+      {/* Status Modal */}
+      <Modal isOpen={isOpen} onClose={onClose} size="lg">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Job Status</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {isStatusLoading ? (
+              <Center>
+                <Spinner size="lg" />
+              </Center>
+            ) : isStatusError ? (
+              <Alert status="error">
+                <AlertIcon />
+                Failed to load job status.
+              </Alert>
+            ) : jobStatus ? (
+              <VStack align="start" spacing={2}>
+                <Text><strong>Job:</strong> {selectedJob}</Text>
+                <Text><strong>Result:</strong> {jobStatus.result || 'In Progress'}</Text>
+                <Text><strong>Duration:</strong> {jobStatus.duration} ms</Text>
+                <Text><strong>Timestamp:</strong> {new Date(jobStatus.timestamp).toLocaleString()}</Text>
+              </VStack>
+            ) : (
+              <Text>No status available.</Text>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
+    </Card>
+  );
+};
+
+export default JenkinsJobsWidget;
+
+
+
+// ./src/components/Widgets/SystemMetricsWidget.tsx
+// src/components/Widgets/SystemMetricsWidget.tsx
+
+import React from 'react';
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Heading,
+  Text,
+  Spinner,
+  Center,
+  Alert,
+  AlertIcon,
+  VStack,
+  Progress,
+} from '@chakra-ui/react';
+import useFetchSystemMetrics from '../../hooks/useFetchSystemMetrics';
+
+const SystemMetricsWidget = () => {
+  const { data, isLoading, isError } = useFetchSystemMetrics();
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader>
+          <Heading size="md">System Metrics</Heading>
+        </CardHeader>
+        <CardBody>
+          <Center>
+            <Spinner size="lg" />
+          </Center>
+        </CardBody>
+      </Card>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Card>
+        <CardHeader>
+          <Heading size="md">System Metrics</Heading>
+        </CardHeader>
+        <CardBody>
+          <Alert status="error">
+            <AlertIcon />
+            Failed to load system metrics.
+          </Alert>
+        </CardBody>
+      </Card>
+    );
+  }
+
+  if (!data) {
+    return <Text>No Data found</Text>
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <Heading size="md">System Metrics</Heading>
+      </CardHeader>
+      <CardBody>
+        <VStack align="start" spacing={3}>
+          <Text>
+            <strong>CPU Load Averages:</strong> {data.cpuLoad.map((load) => load.toFixed(2)).join(', ')}
+          </Text>
+          <Text>
+            <strong>Memory Usage:</strong> {(data.usedMemory / (1024 ** 3)).toFixed(2)} GB /{' '}
+            {(data.totalMemory / (1024 ** 3)).toFixed(2)} GB
+          </Text>
+          <Progress
+            value={(data.usedMemory / data.totalMemory) * 100}
+            size="sm"
+            colorScheme="green"
+            borderRadius="md"
+          />
+          <Text>
+            <strong>Free Memory:</strong> {(data.freeMemory / (1024 ** 3)).toFixed(2)} GB
+          </Text>
+          <Text>
+            <strong>Uptime:</strong> {Math.floor(data.uptime / 3600)}h {Math.floor((data.uptime % 3600) / 60)}m
+          </Text>
+        </VStack>
+      </CardBody>
+    </Card>
+  );
+};
+
+export default SystemMetricsWidget;
+
+
+
+// ./src/contexts/AuthContext.tsx
+// src/contexts/AuthContext.tsx
+
+import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+interface AuthContextType {
+  user: any;
+  isAuthenticated: boolean;
+  login: (token: string, userData: any) => void;
+  logout: () => void;
+}
+
+export const AuthContext = createContext<AuthContextType>({
+  user: null,
+  isAuthenticated: false,
+  login: () => {},
+  logout: () => {},
+});
+
+const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<any>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check for existing tokens in localStorage
+    const token = localStorage.getItem('authToken');
+    const userData = localStorage.getItem('userData');
+    if (token && userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const login = (token: string, userData: any) => {
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('userData', JSON.stringify(userData));
+    setUser(userData);
+    navigate('/');
+  };
+
+  const logout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    setUser(null);
+    navigate('/login');
+  };
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
+        login,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export default AuthProvider;
+
+
+
+// ./src/contexts/NotificationsContext.tsx
+// src/contexts/NotificationsContext.tsx
+
+import React, { createContext, useContext, useState } from 'react';
+
+interface Notification {
+  id: string;
+  message: string;
+  type: 'info' | 'success' | 'warning' | 'error';
+  timestamp: Date;
+}
+
+interface NotificationsContextType {
+  notifications: Notification[];
+  addNotification: (notification: Omit<Notification, 'id' | 'timestamp'>) => void;
+  removeNotification: (id: string) => void;
+}
+
+const NotificationsContext = createContext<NotificationsContextType | undefined>(undefined);
+
+export const useNotifications = () => {
+  const context = useContext(NotificationsContext);
+  if (!context) {
+    throw new Error('useNotifications must be used within a NotificationsProvider');
+  }
+  return context;
+};
+
+const NotificationsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const addNotification = (notification: Omit<Notification, 'id' | 'timestamp'>) => {
+    const id = Math.random().toString(36).substr(2, 9);
+    setNotifications((prev) => [...prev, { ...notification, id, timestamp: new Date() }]);
+  };
+
+  const removeNotification = (id: string) => {
+    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+  };
+
+  return (
+    <NotificationsContext.Provider value={{ notifications, addNotification, removeNotification }}>
+      {children}
+    </NotificationsContext.Provider>
+  );
+};
+
+export default NotificationsProvider;
+
+
+
+// ./src/contexts/SocketContext.tsx
+// src/contexts/SocketContext.tsx
+
+import React, { createContext, useContext, useEffect } from 'react';
+import socketService from '../services/socket';
+import { useAuth } from '../hooks/useAuth';
+import { Socket } from 'socket.io-client';
+
+interface SocketContextType {
+  socket: Socket | null;
+}
+
+const SocketContext = createContext<SocketContextType>({ socket: null });
+
+export const useSocket = () => useContext(SocketContext);
+
+const SocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isAuthenticated, user } = useAuth();
+  const [socket, setSocket] = React.useState<Socket | null>(null);
+
+  useEffect(() => {
+    if (isAuthenticated && user?.token) {
+      const newSocket = socketService.connect(user.token);
+      setSocket(newSocket);
+
+      return () => {
+        socketService.disconnect();
+        setSocket(null);
+      };
+    }
+  }, [isAuthenticated, user]);
+
+  return <SocketContext.Provider value={{ socket }}>{children}</SocketContext.Provider>;
+};
+
+export default SocketProvider;
+
+
+
+// ./src/hooks/useAuth.ts
+// src/hooks/useAuth.ts
+
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
+
+
+// ./src/hooks/useChangePassword.ts
+// src/hooks/useChangePassword.ts
+
+import { useMutation } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface ChangePasswordData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+interface ChangePasswordResponse {
+  message: string;
+}
+
+const useChangePassword = () => {
+  return useMutation<ChangePasswordResponse, Error, ChangePasswordData>({
+    mutationFn: async (data: ChangePasswordData) => {
+      const response = await API.post("/users/change-password", data); // Ensure this endpoint exists
+      return response.data;
+    },
+    onError: (error: any) => {
+      console.error("Failed to change password:", error);
+    },
+  });
+};
+
+export default useChangePassword;
+
+
+
+// ./src/hooks/useConnectRepo.ts
+// src/hooks/useConnectRepo.ts
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface ConnectRepoData {
+  repositoryUrl: string;
+}
+
+interface ConnectRepoResponse {
+  message: string;
+  repository: string;
+}
+
+const useConnectRepo = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    ConnectRepoResponse,
+    Error,
+    { projectId: string; data: ConnectRepoData }
+  >({
+    mutationFn: async ({ projectId, data }) => {
+      const response = await API.post(
+        `/projects/${projectId}/connect-repo`,
+        data
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["projects"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to connect repository:", error);
+      alert("Failed to connect repository. Please try again.");
+    },
+  });
+};
+
+export default useConnectRepo;
+
+
+
+// ./src/hooks/useCreateProject.ts
+// src/hooks/useCreateProject.ts
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface CreateProjectData {
+  name: string;
+  description?: string;
+}
+
+interface CreateProjectResponse {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const useCreateProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<CreateProjectResponse, Error, CreateProjectData>({
+    mutationFn: async (projectData: CreateProjectData) => {
+      const response = await API.post("/projects", projectData);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["projects"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to create project:", error);
+      alert("Failed to create project. Please try again.");
+    },
+  });
+};
+
+export default useCreateProject;
+
+
+
+// ./src/hooks/useDeleteProject.ts
+// src/hooks/useDeleteProject.ts
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface DeleteProjectResponse {
+  message: string;
+}
+
+const useDeleteProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<DeleteProjectResponse, Error, string>({
+    mutationFn: async (projectId: string) => {
+      const response = await API.delete(`/projects/${projectId}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["projects"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to delete project:", error);
+      alert("Failed to delete project. Please try again.");
+    },
+  });
+};
+
+export default useDeleteProject;
+
+
+
+// ./src/hooks/useDeleteUser.ts
+// src/hooks/useDeleteUser.ts
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+
+const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (userId: string) => {
+      const response = await API.delete(`/users/${userId}`); // Ensure this endpoint exists and is admin-protected
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to delete user:", error);
+      alert("Failed to delete the user. Please try again.");
+    },
+  });
+};
+
+export default useDeleteUser;
+
+
+
+// ./src/hooks/useDockerRealTimeUpdates.ts
+// src/hooks/useDockerRealTimeUpdates.ts
+
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSocket } from '../contexts/SocketContext';
+
+const useDockerRealTimeUpdates = () => {
+  const { socket } = useSocket();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleDockerContainerUpdate = (data: any) => {
+      console.log('Docker Container Update:', data);
+      // Invalidate or update specific queries as needed
+      queryClient.invalidateQueries(['dockerContainers']);
+    };
+
+    socket.on('dockerContainerUpdate', handleDockerContainerUpdate);
+
+    return () => {
+      socket.off('dockerContainerUpdate', handleDockerContainerUpdate);
+    };
+  }, [socket, queryClient]);
+};
+
+export default useDockerRealTimeUpdates;
+
+
+
+// ./src/hooks/useFetchCICDEvents.ts
+// src/hooks/useFetchCICDEvents.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+export interface CICDEvent {
+  id: string;
+  projectId: string;
+  eventType: string;
+  timestamp: string;
+  details: string;
+}
+
+const useFetchCICDEvents = (projectId: string) => {
+  return useQuery<CICDEvent[], Error>({
+    queryKey: ["cicdEvents", projectId],
+    queryFn: async () => {
+      const response = await API.get(`/cicd/${projectId}/events`);
+      return response.data;
+    },
+    enabled: !!projectId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: 1,
+  });
+};
+
+export default useFetchCICDEvents;
+
+
+
+// ./src/hooks/useFetchDockerContainers.ts
+// src/hooks/useFetchDockerContainers.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+export interface DockerContainer {
+  Id: string;
+  Names: string[];
+  Image: string;
+  Command: string;
+  Created: number;
+  State: string;
+  Status: string;
+  Ports: any[];
+  Labels: { [key: string]: string };
+  SizeRw: number;
+  SizeRootFs: number;
+}
+
+const useFetchDockerContainers = () => {
+  return useQuery<DockerContainer[], Error>({
+    queryKey: ["dockerContainers"],
+    queryFn: async () => {
+      const response = await API.get("/docker/containers");
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
+};
+
+export default useFetchDockerContainers;
+
+
+
+// ./src/hooks/useFetchDockerLogs.ts
+// src/hooks/useFetchDockerLogs.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+const useFetchDockerLogs = (containerId: string) => {
+  return useQuery<string, Error>({
+    queryKey: ["dockerLogs", containerId],
+    queryFn: async () => {
+      const response = await API.get(`/docker/containers/${containerId}/logs`);
+      return response.data;
+    },
+    enabled: !!containerId,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: 1,
+  });
+};
+
+export default useFetchDockerLogs;
+
+
+
+// ./src/hooks/useFetchJenkinsJobStatus.ts
+// src/hooks/useFetchJenkinsJobStatus.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface JenkinsJobStatus {
+  result: string | null;
+  duration: number;
+  timestamp: number;
+}
+
+const useFetchJenkinsJobStatus = (jobName: string) => {
+  return useQuery<JenkinsJobStatus, Error>({
+    queryKey: ["jenkinsJobStatus", jobName],
+    queryFn: async () => {
+      const response = await API.get(
+        `/jenkins/status/${encodeURIComponent(jobName)}`
+      );
+      return response.data;
+    },
+    enabled: !!jobName, // Only run if jobName is provided
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: 1,
+  });
+};
+
+export default useFetchJenkinsJobStatus;
+
+
+
+// ./src/hooks/useFetchJenkinsJobs.ts
+// src/hooks/useFetchJenkinsJobs.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+export interface JenkinsJob {
+  name: string;
+  color: string;
+}
+
+const useFetchJenkinsJobs = () => {
+  return useQuery<JenkinsJob[], Error>({
+    queryKey: ["jenkinsJobs"],
+    queryFn: async () => {
+      const response = await API.get("/jenkins/jobs");
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
+};
+
+export default useFetchJenkinsJobs;
+
+
+
+// ./src/hooks/useFetchProjects.ts
+// src/hooks/useFetchProjects.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+export interface Project {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const useFetchProjects = () => {
+  return useQuery<Project[], Error>({
+    queryKey: ["projects"],
+    queryFn: async () => {
+      const response = await API.get("/projects");
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  });
+};
+
+export default useFetchProjects;
+
+
+
+// ./src/hooks/useFetchProject.ts
+// src/hooks/useFetchProject.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+import { Project } from "./useFetchProjects";
+
+const useFetchProject = (projectId: string) => {
+  return useQuery<Project, Error>({
+    queryKey: ["project", projectId],
+    queryFn: async () => {
+      const response = await API.get(`/projects/${projectId}`);
+      return response.data;
+    },
+    enabled: !!projectId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    retry: 1,
+  });
+};
+
+export default useFetchProject;
+
+
+
+// ./src/hooks/useFetchSystemLogs.ts
+// src/hooks/useFetchSystemLogs.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+const useFetchSystemLogs = () => {
+  return useQuery<string[], Error>({
+    queryKey: ["systemLogs"],
+    queryFn: async () => {
+      const response = await API.get("/system/logs"); // Ensure this endpoint exists and is admin-protected
+      return response.data;
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: 1,
+  });
+};
+
+export default useFetchSystemLogs;
+
+
+
+// ./src/hooks/useFetchSystemMetrics.ts
+// src/hooks/useFetchSystemMetrics.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface SystemMetrics {
+  cpuLoad: number[];
+  freeMemory: number;
+  totalMemory: number;
+  usedMemory: number;
+  uptime: number;
+}
+
+const useFetchSystemMetrics = () => {
+  return useQuery<SystemMetrics, Error>({
+    queryKey: ["systemMetrics"],
+    queryFn: async () => {
+      const response = await API.get("/monitoring/system");
+      return response.data;
+    },
+    staleTime: 1 * 60 * 1000, // 1 minute
+    refetchInterval: 30 * 1000, // 30 seconds
+    retry: 1,
+  });
+};
+
+export default useFetchSystemMetrics;
+
+
+
+// ./src/hooks/useFetchUserProfile.ts
+// src/hooks/useFetchUserProfile.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+const useFetchUserProfile = () => {
+  return useQuery<UserProfile, Error>({
+    queryKey: ["userProfile"],
+    queryFn: async () => {
+      const response = await API.get("/users/profile");
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000,
+    retry: 1,
+  });
+};
+
+export default useFetchUserProfile;
+
+
+
+// ./src/hooks/useFetchUsers.ts
+// src/hooks/useFetchUsers.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+const useFetchUsers = () => {
+  return useQuery<User[], Error>({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const response = await API.get("/users"); // Ensure this endpoint exists and is admin-protected
+      return response.data;
+    },
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    retry: 1,
+  });
+};
+
+export default useFetchUsers;
+
+
+
+// ./src/hooks/useFetchWebhooks.ts
+// src/hooks/useFetchWebhooks.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface Webhook {
+  id: string;
+  eventType: string;
+  repositoryUrl: string;
+  timestamp: string;
+  details: string;
+}
+
+const useFetchWebhooks = () => {
+  return useQuery<Webhook[], Error>({
+    queryKey: ["webhooks"],
+    queryFn: async () => {
+      const response = await API.get("/webhooks/github");
+      return response.data;
+    },
+    staleTime: 1 * 60 * 1000, // 1 minute
+    retry: 1,
+  });
+};
+
+export default useFetchWebhooks;
+
+
+
+// ./src/hooks/useFetchWorkflowRuns.ts
+// src/hooks/useFetchWorkflowRuns.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+export interface WorkflowRun {
+  id: string;
+  projectId: string;
+  status: string;
+  startedAt: string;
+  completedAt: string;
+  result: string;
+}
+
+const useFetchWorkflowRuns = () => {
+  return useQuery<WorkflowRun[], Error>({
+    queryKey: ["workflowRuns"],
+    queryFn: async () => {
+      const response = await API.get("/cicd/workflow-runs");
+      return response.data;
+    },
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    retry: 1,
+  });
+};
+
+export default useFetchWorkflowRuns;
+
+
+
+// ./src/hooks/useFetchWorkflowStatus.ts
+// src/hooks/useFetchWorkflowStatus.ts
+
+import { useQuery } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface WorkflowStatus {
+  id: string;
+  status: string;
+  progress: number;
+  startedAt: string;
+  completedAt: string | null;
+}
+
+const useFetchWorkflowStatus = (workflowId: string) => {
+  return useQuery<WorkflowStatus, Error>({
+    queryKey: ["workflowStatus", workflowId],
+    queryFn: async () => {
+      const response = await API.get(`/cicd/workflow/${workflowId}/status`);
+      return response.data;
+    },
+    enabled: !!workflowId,
+    staleTime: 1 * 60 * 1000,
+    retry: 1,
+  });
+};
+
+export default useFetchWorkflowStatus;
+
+
+
+// ./src/hooks/useJenkinsRealTimeUpdates.ts
+// src/hooks/useJenkinsRealTimeUpdates.ts
+
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSocket } from '../contexts/SocketContext';
+import { useNotifications } from '../contexts/NotificationsContext';
+
+const useJenkinsRealTimeUpdates = () => {
+  const { socket } = useSocket();
+  const queryClient = useQueryClient();
+  const { addNotification } = useNotifications();
+
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleJenkinsJobUpdate = (data: any) => {
+      console.log('Jenkins Job Update:', data);
+      queryClient.invalidateQueries(['jenkinsJobs']);
+
+      // Push notification
+      addNotification({
+        message: `Jenkins Job "${data.jobName}" updated to ${data.status}.`,
+        type: data.status === 'success' ? 'success' : data.status === 'error' ? 'error' : 'info',
+      });
+    };
+
+    socket.on('jenkinsJobUpdate', handleJenkinsJobUpdate);
+
+    return () => {
+      socket.off('jenkinsJobUpdate', handleJenkinsJobUpdate);
+    };
+  }, [socket, queryClient, addNotification]);
+};
+
+export default useJenkinsRealTimeUpdates;
+
+
+
+// ./src/hooks/useLogin.ts
+// src/hooks/useLogin.ts
+
+import { useMutation } from '@tanstack/react-query';
+import API from '../services/api';
+import { useAuth } from './useAuth';
+
+interface LoginData {
+  email: string;
+  password: string;
+}
+
+interface LoginResponse {
+  access_token: string;
+  user: any;
+}
+
+const useLogin = () => {
+  const { login } = useAuth();
+
+  return useMutation({
+    mutationFn: async (data: LoginData) => {
+      const response = await API.post<LoginResponse>('/auth/login', data);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      login(data.access_token, data.user);
+    },
+    onError: (error: any) => {
+      console.error('Login failed:', error.response?.data?.message || error.message);
+      alert('Login failed. Please check your credentials.');
+    }
+  });
+};
+
+export default useLogin;
+
+
+
+// ./src/hooks/useRegistration.ts
+// src/hooks/useRegistration.ts
+
+import { useMutation } from '@tanstack/react-query';
+import API from '../services/api';
+import { useNavigate } from 'react-router-dom';
+
+interface RegisterData {
+  name: string;
+  email: string;
+  password: string;
+}
+
+const useRegistration = () => {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async (data: RegisterData) => {
+      const response = await API.post('/users/register', data);
+      return response.data;
+    },
+    onSuccess: () => {
+      alert('Registration successful. Please login.');
+      navigate('/login');
+    },
+    onError: (error: any) => {
+      console.error('Registration failed:', error.response?.data?.message || error.message);
+      alert('Registration failed. Please try again.');
+    },
+  });
+};
+
+export default useRegistration;
+
+
+
+// ./src/hooks/useRemoveDockerContainer.ts
+// src/hooks/useRemoveDockerContainer.ts
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+
+const useRemoveDockerContainer = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (containerId: string) => {
+      const response = await API.delete(`/docker/containers/${containerId}`);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["dockerContainers"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to remove container:", error);
+      alert("Failed to remove the container. Please try again.");
+    },
+  });
+};
+
+export default useRemoveDockerContainer;
+
+
+
+// ./src/hooks/useStartDockerContainer.ts
+// src/hooks/useStartDockerContainer.ts
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+
+const useStartDockerContainer = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (containerId: string) => {
+      const response = await API.post(
+        `/docker/containers/${containerId}/start`
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["dockerContainers"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to start container:", error);
+      alert("Failed to start the container. Please try again.");
+    },
+  });
+};
+
+export default useStartDockerContainer;
+
+
+
+// ./src/hooks/useStopDockerContainer.ts
+// src/hooks/useStopDockerContainer.ts
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+
+const useStopDockerContainer = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (containerId: string) => {
+      const response = await API.post(`/docker/containers/${containerId}/stop`);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["dockerContainers"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to stop container:", error);
+      alert("Failed to stop the container. Please try again.");
+    },
+  });
+};
+
+export default useStopDockerContainer;
+
+
+
+// ./src/hooks/useTriggerJenkinsJob.ts
+// src/hooks/useTriggerJenkinsJob.ts
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+import { toast } from "react-toastify";
+
+const useTriggerJenkinsJob = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (jobName: string) => {
+      const response = await API.post(
+        `/jenkins/trigger/${encodeURIComponent(jobName)}`
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Jenkins job triggered successfully.");
+      queryClient.invalidateQueries(["jenkinsJobs"]);
+    },
+    onError: () => {
+      toast.error("Failed to trigger Jenkins job.");
+    },
+  });
+};
+
+export default useTriggerJenkinsJob;
+
+
+
+// ./src/hooks/useTriggerWorkflow.ts
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+import { toast } from "react-toastify";
+
+interface TriggerWorkflowData {
+  projectId: string;
+  workflowName: string;
+}
+
+interface TriggerWorkflowResponse {
+  message: string;
+}
+
+const useTriggerWorkflow = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<TriggerWorkflowResponse, Error, TriggerWorkflowData>({
+    mutationFn: async (data: TriggerWorkflowData) => {
+      const response = await API.post(
+        `/cicd/workflow/${encodeURIComponent(data.workflowName)}/trigger`,
+        {
+          projectId: data.projectId,
+        }
+      );
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Workflow triggered successfully.");
+      queryClient.invalidateQueries(["workflowRuns"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to trigger workflow:", error);
+      toast.error("Failed to trigger workflow. Please try again.");
+    },
+  });
+};
+
+export default useTriggerWorkflow;
+
+
+
+// ./src/hooks/useUpdateProject.ts
+// src/hooks/useUpdateProject.ts
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface UpdateProjectData {
+  name?: string;
+  description?: string;
+}
+
+interface UpdateProjectResponse {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const useUpdateProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    UpdateProjectResponse,
+    Error,
+    { id: string; data: UpdateProjectData }
+  >({
+    mutationFn: async ({ id, data }) => {
+      const response = await API.put(`/projects/${id}`, data);
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["projects"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to update project:", error);
+      alert("Failed to update project. Please try again.");
+    },
+  });
+};
+
+export default useUpdateProject;
+
+
+
+// ./src/hooks/useUpdateUserProfile.ts
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import API from "../services/api";
+
+interface UpdateUserProfileData {
+  name: string;
+  email: string;
+}
+
+interface UpdateUserProfileResponse {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
+
+const useUpdateUserProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<UpdateUserProfileResponse, Error, UpdateUserProfileData>({
+    mutationFn: async (data: UpdateUserProfileData) => {
+      const response = await API.put("/users/profile", data); // Ensure this endpoint exists
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["userProfile"]);
+    },
+    onError: (error: any) => {
+      console.error("Failed to update profile:", error);
+    },
+  });
+};
+
+export default useUpdateUserProfile;
+
+
+
+// ./src/main.tsx
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import App from './App.tsx'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+
+
+
+// ./src/pages/AdminDashboard.tsx
+// src/pages/AdminDashboard.tsx
+
+import React from 'react';
+import {
+  Box,
+  Heading,
+  VStack,
+  Text,
+  Button,
+  List,
+  ListItem,
+  ListIcon,
+  Input,
+  HStack,
+} from '@chakra-ui/react';
+import { FiUsers, FiActivity, FiSearch } from 'react-icons/fi';
+import useFetchUsers from '../hooks/useFetchUsers';
+import useFetchSystemLogs from '../hooks/useFetchSystemLogs';
+import useDeleteUser from '../hooks/useDeleteUser';
+
+const AdminDashboard = () => {
+  const { data: users, isLoading: isUsersLoading, isError: isUsersError } = useFetchUsers();
+  const { data: logs, isLoading: isLogsLoading, isError: isLogsError } = useFetchSystemLogs();
+  const deleteUserMutation = useDeleteUser();
+  const [searchTerm, setSearchTerm] = React.useState('');
+
+  const filteredUsers = React.useMemo(() => {
+    if (!users) return [];
+    return users.filter(
+      (user) =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [users, searchTerm]);
+
+  const handleDeleteUser = (userId: string) => {
+    if (window.confirm('Are you sure you want to delete this user?')) {
+      deleteUserMutation.mutate(userId);
+    }
+  };
+
+  return (
+    <Box p={6}>
+      <Heading mb={6}>Admin Dashboard</Heading>
+      <VStack align="start" spacing={6}>
+        {/* User Management Section */}
+        <Box w="100%">
+          <Heading size="md" mb={4}>
+            <ListItem>
+              <ListIcon as={FiUsers} color="teal.500" />
+              User Management
+            </ListItem>
+          </Heading>
+          {/* Search Bar */}
+          <HStack mb={4}>
+            <Input
+              placeholder="Search users..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              size="sm"
+            />
+            <Button leftIcon={<FiSearch />} size="sm">
+              Search
+            </Button>
+          </HStack>
+          <List spacing={3}>
+            {users && users.length > 0 ? (
+              filteredUsers.length > 0 ? (
+                filteredUsers.map((user: any) => (
+                  <ListItem key={user.id} display="flex" justifyContent="space-between" alignItems="center">
+                    <Text>
+                      {user.name} ({user.email}) - {user.role}
+                    </Text>
+                    <Button
+                      size="sm"
+                      colorScheme="red"
+                      variant="outline"
+                      onClick={() => handleDeleteUser(user.id)}
+                      isLoading={deleteUserMutation.isPending && deleteUserMutation.variables === user.id}
+                    >
+                      Delete
+                    </Button>
+                  </ListItem>
+                ))
+              ) : (
+                <Text>No users match your search.</Text>
+              )
+            ) : (
+              <Text>No users found.</Text>
+            )}
+          </List>
+        </Box>
+
+        {/* System Logs Section */}
+        <Box w="100%">
+          <Heading size="md" mb={4}>
+            <ListItem>
+              <ListIcon as={FiActivity} color="teal.500" />
+              System Logs
+            </ListItem>
+          </Heading>
+          {logs && logs.length > 0 ? (
+            <Box
+              maxH="400px"
+              overflowY="scroll"
+              bg="gray.100"
+              p={4}
+              borderRadius="md"
+              whiteSpace="pre-wrap"
+              fontFamily="monospace"
+              fontSize="sm"
+            >
+              {logs.map((log: string, index: number) => (
+                <Text key={index}>{log}</Text>
+              ))}
+            </Box>
+          ) : (
+            <Text>No logs available.</Text>
+          )}
+        </Box>
+
+        {/* Add more admin-specific sections as needed */}
+      </VStack>
+    </Box>
+  );
+};
+
+export default AdminDashboard;
+
+
+
+// ./src/pages/Dashboard.tsx
+// src/pages/Dashboard.tsx
+
+import React from 'react';
+import { Box, Flex, Grid, GridItem } from '@chakra-ui/react';
+import Header from '../components/Layout/Header';
+import Sidebar from '../components/Layout/Sidebar';
+import JenkinsJobsWidget from '../components/Widgets/JenkinsJobsWidget';
+import DockerContainersWidget from '../components/Widgets/DockerContainersWidget';
+import SystemMetricsWidget from '../components/Widgets/SystemMetricsWidget';
+// Import additional widgets as needed
+
+const Dashboard = () => {
+  return (
+    <Flex direction="column" height="100vh">
+      <Header />
+      <Flex flex="1">
+        <Sidebar />
+        <Box flex="1" p={4} overflowY="auto">
+          <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={4}>
+            <GridItem>
+              <JenkinsJobsWidget />
+            </GridItem>
+            <GridItem>
+              <DockerContainersWidget />
+            </GridItem>
+            <GridItem>
+              <SystemMetricsWidget />
+            </GridItem>
+            {/* Add more GridItems with widgets here */}
+          </Grid>
+        </Box>
+      </Flex>
+    </Flex>
+  );
+};
+
+export default Dashboard;
+
+
+
+// ./src/pages/Login.tsx
+// src/pages/Login.tsx
+
+import React, { useState } from 'react';
+import { Box, Button, Input, VStack, Heading, FormControl, FormLabel } from '@chakra-ui/react';
+import useLogin from '../hooks/useLogin';
+
+const Login = () => {
+  const { isPending, mutateAsync } = useLogin();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await mutateAsync({ email, password });
+  };
+
+  return (
+    <Box maxW="md" mx="auto" mt={10} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
+      <Heading mb={6} textAlign="center">Login</Heading>
+      <form onSubmit={handleSubmit}>
+        <VStack spacing={4}>
+          <FormControl id="email" isRequired>
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="password" isRequired>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormControl>
+          <Button
+            type="submit"
+            colorScheme="teal"
+            width="full"
+            isLoading={isPending}
+          >
+            Login
+          </Button>
+        </VStack>
+      </form>
+    </Box>
+  );
+};
+
+export default Login;
+
+
+
+// ./src/pages/Profile.tsx
+import React from 'react';
+import {
+  Box,
+  Heading,
+  VStack,
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  Spinner,
+  Center,
+  Alert,
+  AlertIcon,
+} from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import useFetchUserProfile from '../hooks/useFetchUserProfile';
+import useUpdateUserProfile from '../hooks/useUpdateUserProfile';
+import useChangePassword from '../hooks/useChangePassword';
+import { toast } from 'react-toastify';
+
+interface ProfileFormData {
+  name: string;
+  email: string;
+}
+
+interface PasswordFormData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+const Profile = () => {
+  const { data: user, isLoading, isError } = useFetchUserProfile();
+  const updateProfileMutation = useUpdateUserProfile();
+  const changePasswordMutation = useChangePassword();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ProfileFormData>();
+
+  const {
+    register: registerPassword,
+    handleSubmit: handleSubmitPassword,
+    formState: { errors: passwordErrors },
+    reset: resetPassword,
+  } = useForm<PasswordFormData>();
+
+  React.useEffect(() => {
+    if (user) {
+      reset({
+        name: user.name,
+        email: user.email,
+      });
+    }
+  }, [user, reset]);
+
+  const onSubmit = (data: ProfileFormData) => {
+    updateProfileMutation.mutate(data, {
+      onSuccess: () => {
+        toast.success('Profile updated successfully.');
+      },
+      onError: () => {
+        toast.error('Failed to update profile.');
+      },
+    });
+  };
+
+  const onSubmitPassword = (data: PasswordFormData) => {
+    if (data.newPassword !== data.confirmPassword) {
+      toast.error('New passwords do not match.');
+      return;
+    }
+    changePasswordMutation.mutate(data, {
+      onSuccess: () => {
+        toast.success('Password changed successfully.');
+        resetPassword();
+      },
+      onError: () => {
+        toast.error('Failed to change password.');
+      },
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <Center h="100%">
+        <Spinner size="lg" />
+      </Center>
+    );
+  }
+
+  if (isError || !user) {
+    return (
+      <Center h="100%">
+        <Alert status="error">
+          <AlertIcon />
+          Failed to load user profile.
+        </Alert>
+      </Center>
+    );
+  }
+
+  return (
+    <Box p={6}>
+      <Heading mb={6}>Profile</Heading>
+      <VStack align="start" spacing={6}>
+        {/* Update Profile Section */}
+        <Box w="100%">
+          <Heading size="md" mb={4}>Update Profile</Heading>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <VStack spacing={4} align="stretch">
+              <FormControl id="name" isRequired>
+                <FormLabel>Name</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="Your Name"
+                  {...register('name', { required: 'Name is required.' })}
+                />
+                {errors.name && <span style={{ color: 'red' }}>{errors.name.message}</span>}
+              </FormControl>
+              <FormControl id="email" isRequired>
+                <FormLabel>Email</FormLabel>
+                <Input
+                  type="email"
+                  placeholder="your.email@example.com"
+                  {...register('email', {
+                    required: 'Email is required.',
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: 'Invalid email address.',
+                    },
+                  })}
+                />
+                {errors.email && <span style={{ color: 'red' }}>{errors.email.message}</span>}
+              </FormControl>
+              <Button
+                type="submit"
+                colorScheme="teal"
+                isLoading={updateProfileMutation.isPending}
+              >
+                Update Profile
+              </Button>
+            </VStack>
+          </form>
+        </Box>
+
+        {/* Change Password Section */}
+        <Box w="100%">
+          <Heading size="md" mb={4}>Change Password</Heading>
+          <form onSubmit={handleSubmitPassword(onSubmitPassword)}>
+            <VStack spacing={4} align="stretch">
+              <FormControl id="currentPassword" isRequired>
+                <FormLabel>Current Password</FormLabel>
+                <Input
+                  type="password"
+                  placeholder="Current Password"
+                  {...registerPassword('currentPassword', { required: 'Current password is required.' })}
+                />
+                {passwordErrors.currentPassword && <span style={{ color: 'red' }}>{passwordErrors.currentPassword.message}</span>}
+              </FormControl>
+              <FormControl id="newPassword" isRequired>
+                <FormLabel>New Password</FormLabel>
+                <Input
+                  type="password"
+                  placeholder="New Password"
+                  {...registerPassword('newPassword', {
+                    required: 'New password is required.',
+                    minLength: { value: 6, message: 'Password must be at least 6 characters.' },
+                  })}
+                />
+                {passwordErrors.newPassword && <span style={{ color: 'red' }}>{passwordErrors.newPassword.message}</span>}
+              </FormControl>
+              <FormControl id="confirmPassword" isRequired>
+                <FormLabel>Confirm New Password</FormLabel>
+                <Input
+                  type="password"
+                  placeholder="Confirm New Password"
+                  {...registerPassword('confirmPassword', { required: 'Please confirm your new password.' })}
+                />
+                {passwordErrors.confirmPassword && <span style={{ color: 'red' }}>{passwordErrors.confirmPassword.message}</span>}
+              </FormControl>
+              <Button
+                type="submit"
+                colorScheme="purple"
+                isLoading={changePasswordMutation.isPending}
+              >
+                Change Password
+              </Button>
+            </VStack>
+          </form>
+        </Box>
+      </VStack>
+    </Box>
+  );
+};
+
+export default Profile;
+
+
+
+// ./src/pages/ProjectDetailPage.tsx
+// src/pages/ProjectDetailPage.tsx
+
+import React from 'react';
+import { Box, Heading, Tabs, TabList, TabPanels, Tab, TabPanel, Button, HStack } from '@chakra-ui/react';
+import { useParams } from 'react-router-dom';
+import ProjectDetail from '../components/Projects/ProjectDetail';
+import CICDEvents from '../components/CI_CD/CICDEvents';
+import WorkflowRuns from '../components/CI_CD/WorkflowRuns';
+import useTriggerWorkflow from '../hooks/useTriggerWorkflow';
+import { useForm } from 'react-hook-form';
+import { FiPlay } from 'react-icons/fi';
+import { toast } from 'react-toastify';
+
+interface TriggerWorkflowForm {
+    workflowName: string;
+}
+
+const ProjectDetailPage = () => {
+    const { id } = useParams<{ id: string }>();
+    const triggerWorkflowMutation = useTriggerWorkflow();
+    const { register, handleSubmit, reset } = useForm<TriggerWorkflowForm>();
+
+    const onSubmit = (data: TriggerWorkflowForm) => {
+        if (id) {
+            triggerWorkflowMutation.mutate(
+                { projectId: id, workflowName: data.workflowName },
+                {
+                    onSuccess: () => {
+                        reset();
+                    },
+                }
+            );
+        }
+    };
+
+    return (
+        <Box p={6}>
+            <Heading mb={6}>Project Details</Heading>
+            <ProjectDetail />
+            <Tabs mt={6} variant="enclosed">
+                <TabList>
+                    <Tab>CI/CD Events</Tab>
+                    <Tab>Workflow Runs</Tab>
+                </TabList>
+                <TabPanels>
+                    <TabPanel>
+                        <CICDEvents />
+                    </TabPanel>
+                    <TabPanel>
+                        <HStack mb={4}>
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <HStack spacing={2}>
+                                    <input
+                                        type="text"
+                                        placeholder="Workflow Name"
+                                        {...register('workflowName', { required: 'Workflow name is required.' })}
+                                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+                                    />
+                                    <Button type="submit" leftIcon={<FiPlay />} colorScheme="teal">
+                                        Trigger Workflow
+                                    </Button>
+                                </HStack>
+                            </form>
+                        </HStack>
+                        <WorkflowRuns />
+                    </TabPanel>
+                </TabPanels>
+            </Tabs>
+        </Box>
+    );
+};
+
+export default ProjectDetailPage;
+
+
+
+// ./src/pages/ProjectsPage.tsx
+// src/pages/ProjectsPage.tsx
+
+import React from 'react';
+import { Box, Heading } from '@chakra-ui/react';
+import ProjectList from '../components/Projects/ProjectList';
+
+const ProjectsPage = () => {
+  return (
+    <Box p={6}>
+      <Heading mb={6}>Projects</Heading>
+      <ProjectList />
+    </Box>
+  );
+};
+
+export default ProjectsPage;
+
+
+
+// ./src/pages/Register.tsx
+// src/pages/Register.tsx
+
+import React, { useState } from 'react';
+import { Box, Button, Input, VStack, Heading, FormControl, FormLabel } from '@chakra-ui/react';
+import useRegistration from '../hooks/useRegistration';
+
+const Register = () => {
+  const { mutateAsync, isPending } = useRegistration();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await mutateAsync({ name, email, password });
+  };
+
+  return (
+    <Box maxW="md" mx="auto" mt={10} p={6} borderWidth={1} borderRadius="lg" boxShadow="lg">
+      <Heading mb={6} textAlign="center">Register</Heading>
+      <form onSubmit={handleSubmit}>
+        <VStack spacing={4}>
+          <FormControl id="name" isRequired>
+            <FormLabel>Name</FormLabel>
+            <Input
+              type="text"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="email" isRequired>
+            <FormLabel>Email</FormLabel>
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </FormControl>
+          <FormControl id="password" isRequired>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </FormControl>
+          <Button
+            type="submit"
+            colorScheme="teal"
+            width="full"
+            isLoading={isPending}
+          >
+            Register
+          </Button>
+        </VStack>
+      </form>
+    </Box>
+  );
+};
+
+export default Register;
+
+
+
+// ./src/pages/WebhooksPage.tsx
+import {
+  Box,
+  Heading,
+  List,
+  ListItem,
+  ListIcon,
+  Spinner,
+  Center,
+  Alert,
+  AlertIcon,
+  Text,
+} from '@chakra-ui/react';
+import { FiActivity } from 'react-icons/fi';
+import useFetchWebhooks from '../hooks/useFetchWebhooks';
+
+const WebhooksPage = () => {
+  const { data: webhooks, isLoading, isError } = useFetchWebhooks();
+
+  if (isLoading) {
+    return (
+      <Center>
+        <Spinner size="lg" />
+      </Center>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Alert status="error">
+        <AlertIcon />
+        Failed to load webhooks.
+      </Alert>
+    );
+  }
+
+  return (
+    <Box p={6}>
+      <Heading mb={6}>GitHub Webhooks</Heading>
+      {webhooks && webhooks.length > 0 ? (
+        <List spacing={3}>
+          {webhooks.map((hook: any) => (
+            <ListItem key={hook.id} borderWidth={1} borderRadius="md" p={4}>
+              <ListIcon as={FiActivity} color="teal.500" />
+              <Text><strong>Event:</strong> {hook.eventType}</Text>
+              <Text><strong>Repository:</strong> {hook.repositoryUrl}</Text>
+              <Text><strong>Timestamp:</strong> {new Date(hook.timestamp).toLocaleString()}</Text>
+              <Text><strong>Details:</strong> {hook.details}</Text>
+            </ListItem>
+          ))}
+        </List>
+      ) : (
+        <Text>No webhooks received yet.</Text>
+      )}
+    </Box>
+  );
+};
+
+export default WebhooksPage;
+
+
+
+// ./src/routes/AppRoutes.tsx
+import { Routes, Route } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import { lazy, Suspense } from "react";
+import { Center, Spinner } from "@chakra-ui/react";
+// import Login from "../pages/Login";
+// import Register from "../pages/Register";
+// import Dashboard from "../pages/Dashboard";
+// import Profile from "../pages/Profile";
+// import AdminDashboard from "../pages/AdminDashboard";
+// import ProjectsPage from "../pages/ProjectsPage";
+// import ProjectDetailPage from "../pages/ProjectDetailPage";
+// import WebhooksPage from "../pages/WebhooksPage";
+
+const Login = lazy(() => import("../pages/Login"));
+const Register = lazy(() => import("../pages/Register"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const Profile = lazy(() => import("../pages/Profile"));
+const AdminDashboard = lazy(() => import("../pages/AdminDashboard"));
+const ProjectsPage = lazy(() => import("../pages/ProjectsPage"));
+const ProjectDetailPage = lazy(() => import("../pages/ProjectDetailPage"));
+const WebhooksPage = lazy(() => import("../pages/WebhooksPage"));
+
+const AppRoutes = () => {
+  const { isAuthenticated, user } = useAuth();
+
+  console.log(isAuthenticated);
+
+  if (!isAuthenticated) {
+    return (
+      <Suspense
+        fallback={
+          <Center h="100vh">
+            <Spinner size="xl" />
+          </Center>
+        }
+      >
+        <Routes>
+          <Route path="/profile" element={<Profile />} />
+
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects/:id" element={<ProjectDetailPage />} />
+          <Route path="/webhooks" element={<WebhooksPage />} />
+
+          {user?.role === "ADMIN" && (
+            <>
+              <Route path="/admin" element={<AdminDashboard />} />
+            </>
+          )}
+
+          <Route path="*" element={<Dashboard />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
+  return (
+    <Suspense
+      fallback={
+        <Center h="100vh">
+          <Spinner size="xl" />
+        </Center>
+      }
+    >
+      <Routes>
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Login />} />
+      </Routes>
+    </Suspense>
+  );
+};
+{
+  /* Fallback Route */
+}
+// <Route path="*" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+
+export default AppRoutes;
+
+
+
+// ./src/services/api.ts
+// src/services/api.ts
+
+import axios from 'axios';
+
+const API = axios.create({
+  baseURL: 'http://localhost:3000', // Replace with your backend URL
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Add a request interceptor to include the auth token
+API.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('authToken');
+    if (token && config.headers) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export default API;
+
+
+
+// ./src/services/socket.ts
+// src/services/socket.ts
+
+import { io, Socket } from 'socket.io-client';
+
+class SocketService {
+  private socket: Socket | null = null;
+
+  public connect(token: string): Socket {
+    if (!this.socket) {
+      this.socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000', {
+        auth: {
+          token,
+        },
+      });
+
+      this.socket.on('connect', () => {
+        console.log('Connected to WebSocket server');
+      });
+
+      this.socket.on('disconnect', () => {
+        console.log('Disconnected from WebSocket server');
+      });
+
+      this.socket.on('connect_error', (err) => {
+        console.error('Connection Error:', err.message);
+      });
+    }
+    return this.socket;
+  }
+
+  public disconnect() {
+    if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
+  }
+}
+
+const socketService = new SocketService();
+export default socketService;
+
+
+
+// ./src/theme/index.ts
+// // src/theme/index.ts
+
+// import { extendTheme, ThemeConfig } from '@chakra-ui/react';
+
+// const config: ThemeConfig = {
+//   initialColorMode: 'light',
+//   useSystemColorMode: false,
+// };
+
+// const theme = extendTheme({ config });
+
+// export default theme;
+
+
+// src/theme/index.ts
+
+import { extendTheme, ThemeConfig } from '@chakra-ui/react';
+
+const config: ThemeConfig = {
+  initialColorMode: 'light',
+  useSystemColorMode: false,
+};
+
+const colors = {
+  brand: {
+    50: '#e3f9e5',
+    100: '#c1eac7',
+    200: '#a3d9a8',
+    300: '#7bc47f',
+    400: '#57ae5b',
+    500: '#3f9142',
+    600: '#2c7833',
+    700: '#1e5d26',
+    800: '#13361c',
+    900: '#0a2410',
+  },
+};
+
+const fonts = {
+  heading: `'Roboto', sans-serif`,
+  body: `'Open Sans', sans-serif`,
+};
+
+const components = {
+  Button: {
+    baseStyle: {
+      borderRadius: 'md',
+    },
+    variants: {
+      solid: {
+        bg: 'brand.500',
+        color: 'white',
+        _hover: {
+          bg: 'brand.600',
+        },
+      },
+      outline: {
+        borderColor: 'brand.500',
+        color: 'brand.500',
+        _hover: {
+          bg: 'brand.50',
+        },
+      },
+    },
+  },
+  // Customize other components as needed
+};
+
+const theme = extendTheme({ config, colors, fonts, components });
+
+export default theme;
+
+
+
+// ./src/vite-env.d.ts
+/// <reference types="vite/client" />
+
+
+
+// ./tsconfig.json
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true
+  }
+}
+
+
+
+// ./vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react-swc'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+})
+
+
+

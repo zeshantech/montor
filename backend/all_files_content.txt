@@ -1,0 +1,2123 @@
+// ./all_files_content.txt
+
+
+
+// ./analyzer.sh
+#!/bin/bash
+
+output_file="all_files_content.txt"
+
+> "$output_file"
+
+function append_file_contents() {
+    local dir="$1"
+
+    for entry in "$dir"/*; do
+        if [ -d "$entry" ]; then
+            append_file_contents "$entry"
+        elif [ -f "$entry" ]; then
+            echo "// ${entry#$PWD/}" >> "$output_file"
+            cat "$entry" >> "$output_file"
+            echo -e "\n\n" >> "$output_file"
+        fi
+    done
+}
+
+append_file_contents "."
+
+echo "All file contents have been written to $output_file."
+
+
+// ./newrelic.js
+'use strict';
+
+exports.config = {
+  app_name: ['cicd-monitoring-nestjs-server'],
+  license_key: process.env.NEW_RELIC_LICENSE_KEY,
+  logging: {
+    level: 'info',
+  },
+  allow_all_headers: true,
+  attributes: {
+    exclude: [
+      'request.headers.cookie',
+      'request.headers.authorization',
+      'request.headers.proxyAuthorization',
+      'request.headers.x-nylas-*',
+      'response.headers.cookie',
+      'response.headers.authorization',
+      'response.headers.proxyAuthorization',
+      'response.headers.x-nylas-*',
+    ],
+  },
+};
+
+
+
+// ./package.json
+{
+  "name": "backend",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start:dev:newrelic": "NEW_RELIC_APP_NAME=cicd-monitoring-nestjs-server NEW_RELIC_LICENSE_KEY=8655b3e7490c28a159963103fb3bab96FFFFNRAL ts-node -r newrelic -r tsconfig-paths/register src/main.ts",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.2.3",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.2.0",
+    "@nestjs/mapped-types": "^2.0.5",
+    "@nestjs/passport": "^10.0.3",
+    "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-socket.io": "^10.4.4",
+    "@nestjs/swagger": "^7.4.2",
+    "@nestjs/typeorm": "^10.0.2",
+    "@nestjs/websockets": "^10.4.4",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "dotenv": "^16.4.5",
+    "newrelic": "^12.5.1",
+    "nodemailer": "^6.9.15",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "pg": "^8.13.0",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.1",
+    "socket.io": "^4.8.0",
+    "typeorm": "^0.3.20",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.0.0",
+    "@nestjs/schematics": "^10.0.0",
+    "@nestjs/testing": "^10.0.0",
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.3.1",
+    "@types/nodemailer": "^6.4.16",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/supertest": "^6.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "source-map-support": "^0.5.21",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.1.0",
+    "ts-loader": "^9.4.3",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.3"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node"
+  }
+}
+
+
+
+// ./src/app.controller.ts
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+
+
+
+// ./src/app.module.ts
+// backend/src/app.module.ts
+
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+import { ProjectsModule } from './projects/projects.module';
+import { WebhooksModule } from './webhooks/webhooks.module';
+import { CicdModule } from './cicd/cicd.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { CICDEvent } from './cicd/cicd.entity';
+import { Project } from './projects/project.entity';
+import { User } from './users/user.entity';
+import { MonitoringModule } from './monitoring/monitoring.module';
+import { JenkinsModule } from './jenkins/jenkins.module';
+import { DockerModule } from './docker/docker.module';
+import { LoggingMiddleware } from './middleware/logging.middleware';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DATABASE_HOST'),
+        port: parseInt(configService.get<string>('DATABASE_PORT'), 10),
+        username: configService.get<string>('DATABASE_USERNAME'),
+        password: configService.get<string>('DATABASE_PASSWORD'),
+        database: configService.get<string>('DATABASE_NAME'),
+        entities: [User, Project, CICDEvent],
+        synchronize: true, // Disable in production
+      }),
+    }),
+    UsersModule,
+    AuthModule,
+    ProjectsModule,
+    WebhooksModule,
+    CicdModule,
+    NotificationsModule,
+    MonitoringModule,
+    JenkinsModule,
+    DockerModule,
+  ],
+  controllers: [],
+  providers: [],
+})
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(LoggingMiddleware).forRoutes('*'); // Apply to all routes
+  }
+}
+
+
+// ./src/app.service.ts
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+
+
+
+// ./src/auth/auth.controller.ts
+// backend/src/auth/auth.controller.ts
+
+import {
+    Controller,
+    Post,
+    Body,
+    UnauthorizedException,
+  } from '@nestjs/common';
+  import { AuthService } from './auth.service';
+  import { UsersService } from '../users/users.service';
+  import { LoginDto } from './dto/login.dto';
+  
+  @Controller('auth')
+  export class AuthController {
+    constructor(
+      private authService: AuthService,
+      private usersService: UsersService,
+    ) {}
+  
+    // Login endpoint
+    @Post('login')
+    async login(@Body() loginDto: LoginDto) {
+      const user = await this.authService.validateUser(
+        loginDto.email,
+        loginDto.password,
+      );
+      if (!user) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+      return this.authService.login(user);
+    }
+  }
+  
+
+
+// ./src/auth/auth.module.ts
+// backend/src/auth/auth.module.ts
+
+import { Module } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { UsersModule } from '../users/users.module';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtStrategy } from './jwt.strategy';
+import { AuthController } from './auth.controller';
+
+@Module({
+  imports: [
+    UsersModule,
+    PassportModule,
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET') || 'defaultSecret',
+        signOptions: { expiresIn: '1h' },
+      }),
+      inject: [ConfigService],
+    }),
+  ],
+  providers: [AuthService, JwtStrategy],
+  controllers: [AuthController],
+})
+export class AuthModule {}
+
+
+
+// ./src/auth/auth.service.ts
+// backend/src/auth/auth.service.ts
+
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UsersService } from '../users/users.service';
+import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { User } from '../users/user.entity';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    private usersService: UsersService,
+    private jwtService: JwtService,
+  ) {}
+
+  // Validate user credentials
+  async validateUser(
+    email: string,
+    pass: string,
+  ): Promise<User | null> {
+    const user = await this.usersService.findByEmail(email);
+    if (user && (await bcrypt.compare(pass, user.password))) {
+      return user;
+    }
+    return null;
+  }
+
+  async login(user: User) {
+    const payload = { username: user.email, sub: user.id, role: user.role };
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
+  }
+}
+
+
+
+// ./src/auth/dto/login.dto.ts
+// backend/src/auth/dto/login.dto.ts
+
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty } from 'class-validator';
+
+export class LoginDto {
+  @ApiProperty()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  password: string;
+}
+
+
+
+// ./src/auth/jwt.strategy.ts
+// backend/src/auth/jwt.strategy.ts
+
+import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { ConfigService } from '@nestjs/config';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/user.entity';
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(
+    private configService: ConfigService,
+    private usersService: UsersService,
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false, // Ensure token is not expired
+      secretOrKey: configService.get<string>('JWT_SECRET'),
+    });
+  }
+
+  // Validate JWT payload and attach user to request
+  async validate(payload: any): Promise<User> {
+    const user = await this.usersService.findById(payload.sub);
+    if (!user) {
+      return null;
+    }
+
+    return user;
+  }
+}
+
+
+
+// ./src/auth/roles.decorator.ts
+// backend/src/auth/roles.decorator.ts
+
+import { SetMetadata } from '@nestjs/common';
+import { UserRole } from '../users/user.entity';
+
+export const ROLES_KEY = 'roles';
+export const Roles = (...roles: UserRole[]) => SetMetadata(ROLES_KEY, roles);
+
+
+
+// ./src/auth/roles.guard.ts
+// backend/src/auth/roles.guard.ts
+
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { ROLES_KEY } from './roles.decorator';
+import { UserRole } from '../users/user.entity';
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+    if (!requiredRoles) {
+      return true;
+    }
+    const { user } = context.switchToHttp().getRequest();
+    return requiredRoles.includes(user.role);
+  }
+}
+
+
+
+// ./src/cicd/cicd.controller.ts
+// backend/src/cicd/cicd.controller.ts
+
+import { Controller, Get, Param, UseGuards, Req } from '@nestjs/common';
+import { CicdService } from './cicd.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { UserRole } from '../users/user.entity';
+
+@Controller('cicd')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+export class CicdController {
+  constructor(private readonly cicdService: CicdService) { }
+
+  @Get(':projectId/events')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async getCICDEvents(
+    @Param('projectId') projectId: string,
+  ) {
+    return this.cicdService.getCICDEventsForProject(+projectId);
+  }
+
+
+  @Get('workflow-runs')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async getWorkflowRuns() {
+    return this.cicdService.getWorkflowRuns();
+  }
+}
+
+
+
+// ./src/cicd/cicd.entity.ts
+// backend/src/cicd/cicd.entity.ts
+
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    CreateDateColumn,
+  } from 'typeorm';
+  import { Project } from '../projects/project.entity';
+  
+  export enum BuildStatus {
+    SUCCESS = 'success',
+    FAILURE = 'failure',
+    IN_PROGRESS = 'in_progress',
+    QUEUED = 'queued',
+  }
+  
+  @Entity()
+  export class CICDEvent {
+    @PrimaryGeneratedColumn()
+    id: number;
+  
+    @ManyToOne(() => Project, (project) => project.id, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'projectId' })
+    project: Project;
+  
+    @Column()
+    eventType: string; // e.g., 'push', 'pull_request', 'deployment'
+  
+    @Column({ type: 'enum', enum: BuildStatus })
+    status: BuildStatus;
+  
+    @Column({ nullable: true })
+    commitSha: string;
+  
+    @Column({ nullable: true })
+    branch: string;
+  
+    @CreateDateColumn()
+    createdAt: Date;
+  }
+  
+
+
+// ./src/cicd/cicd.module.ts
+// backend/src/cicd/cicd.module.ts
+
+import { Module } from '@nestjs/common';
+import { CicdService } from './cicd.service';
+import { CicdController } from './cicd.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CICDEvent } from './cicd.entity';
+import { ProjectsModule } from '../projects/projects.module';
+import { NotificationsModule } from '../notifications/notifications.module';
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([CICDEvent]),
+    ProjectsModule,
+    NotificationsModule,
+  ],
+  providers: [CicdService],
+  controllers: [CicdController],
+  exports: [CicdService],
+})
+export class CicdModule {}
+
+
+
+// ./src/cicd/cicd.service.ts
+
+
+import {
+  Injectable,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CICDEvent, BuildStatus } from './cicd.entity';
+import { Project } from '../projects/project.entity';
+import { NotificationsService } from '../notifications/notifications.service';
+import { ConfigService } from '@nestjs/config';
+import axios from 'axios';
+
+@Injectable()
+export class CicdService {
+  private readonly githubApiUrl = 'https://api.github.com';
+  private readonly owner = 'your-github-username';
+  private readonly repo = 'your-repository-name';
+
+  constructor(
+    @InjectRepository(CICDEvent)
+    private cicdRepository: Repository<CICDEvent>,
+    private notificationsService: NotificationsService,
+    private readonly configService: ConfigService,
+  ) { }
+
+
+  async createCICDEvent(
+    project: Project,
+    eventType: string,
+    status: BuildStatus,
+    commitSha?: string,
+    branch?: string,
+  ): Promise<CICDEvent> {
+    const cicdEvent = this.cicdRepository.create({
+      project,
+      eventType,
+      status,
+      commitSha,
+      branch,
+    });
+    const savedEvent = await this.cicdRepository.save(cicdEvent);
+
+
+    await this.handleNotifications(project, savedEvent);
+
+    return savedEvent;
+  }
+
+
+  async getCICDEventsForProject(projectId: number): Promise<CICDEvent[]> {
+    return this.cicdRepository.find({
+      where: { project: { id: projectId } },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async getWorkflowRuns() {
+    const githubToken = this.configService.get<string>('GITHUB_TOKEN');
+    const response = await axios.get(
+      `${this.githubApiUrl}/repos/${this.owner}/${this.repo}/actions/runs`,
+      {
+        headers: {
+          Authorization: `token ${githubToken}`,
+          Accept: 'application/vnd.github.v3+json',
+        },
+      },
+    );
+    return response.data;
+  }
+
+
+
+  private async handleNotifications(project: Project, event: CICDEvent) {
+
+    if (event.status === BuildStatus.FAILURE) {
+
+      const subject = `Build Failure for Project: ${project.name}`;
+      const html = `
+          <p>Hello ${project.createdBy.name},</p>
+          <p>The latest build for your project <strong>${project.name}</strong> has <strong>failed</strong>.</p>
+          <p><strong>Commit SHA:</strong> ${event.commitSha}</p>
+          <p><strong>Branch:</strong> ${event.branch}</p>
+          <p>Please investigate the issue.</p>
+          <p>Regards,<br/>DevOps Dashboard</p>
+        `;
+      await this.notificationsService.sendEmail(
+        project.createdBy.email,
+        subject,
+        html,
+      );
+    } else if (event.status === BuildStatus.SUCCESS) {
+
+      const subject = `Build Success for Project: ${project.name}`;
+      const html = `
+          <p>Hello ${project.createdBy.name},</p>
+          <p>The latest build for your project <strong>${project.name}</strong> has <strong>succeeded</strong>.</p>
+          <p><strong>Commit SHA:</strong> ${event.commitSha}</p>
+          <p><strong>Branch:</strong> ${event.branch}</p>
+          <p>Keep up the good work!</p>
+          <p>Regards,<br/>DevOps Dashboard</p>
+        `;
+      await this.notificationsService.sendEmail(
+        project.createdBy.email,
+        subject,
+        html,
+      );
+    }
+
+
+  }
+}
+
+
+
+// ./src/docker/docker.controller.spec.ts
+import { Test, TestingModule } from '@nestjs/testing';
+import { DockerController } from './docker.controller';
+
+describe('DockerController', () => {
+  let controller: DockerController;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [DockerController],
+    }).compile();
+
+    controller = module.get<DockerController>(DockerController);
+  });
+
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+});
+
+
+
+// ./src/docker/docker.controller.ts
+// backend/src/docker/docker.controller.ts
+
+import { Controller, Get, Post, Delete, Param, UseGuards, Logger } from '@nestjs/common';
+import { DockerService } from './docker.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { UserRole } from '../users/user.entity';
+
+@Controller('docker')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+export class DockerController {
+  private readonly logger = new Logger(DockerController.name);
+
+  constructor(private readonly dockerService: DockerService) {}
+
+  @Get('containers')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async listContainers() {
+    this.logger.log('Fetching Docker containers');
+    return this.dockerService.listContainers();
+  }
+
+  @Post('containers/:id/start')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async startContainer(@Param('id') containerId: string) {
+    this.logger.log(`Starting Docker container: ${containerId}`);
+    return this.dockerService.startContainer(containerId);
+  }
+
+  @Post('containers/:id/stop')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async stopContainer(@Param('id') containerId: string) {
+    this.logger.log(`Stopping Docker container: ${containerId}`);
+    return this.dockerService.stopContainer(containerId);
+  }
+
+  @Delete('containers/:id')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async removeContainer(@Param('id') containerId: string) {
+    this.logger.log(`Removing Docker container: ${containerId}`);
+    return this.dockerService.removeContainer(containerId);
+  }
+
+  @Get('containers/:id/logs')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async getContainerLogs(@Param('id') containerId: string) {
+    this.logger.log(`Fetching logs for Docker container: ${containerId}`);
+    return this.dockerService.getContainerLogs(containerId);
+  }
+}
+
+
+
+// ./src/docker/docker.module.ts
+// backend/src/docker/docker.module.ts
+
+import { Module } from '@nestjs/common';
+import { DockerService } from './docker.service';
+import { DockerController } from './docker.controller';
+import { ConfigModule } from '@nestjs/config';
+
+@Module({
+  imports: [ConfigModule],
+  providers: [DockerService],
+  controllers: [DockerController],
+  exports: [DockerService],
+})
+export class DockerModule {}
+
+
+
+// ./src/docker/docker.service.spec.ts
+import { Test, TestingModule } from '@nestjs/testing';
+import { DockerService } from './docker.service';
+
+describe('DockerService', () => {
+  let service: DockerService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [DockerService],
+    }).compile();
+
+    service = module.get<DockerService>(DockerService);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+});
+
+
+
+// ./src/docker/docker.service.ts
+// backend/src/docker/docker.service.ts
+
+import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
+import axios, { AxiosInstance } from 'axios';
+import { ConfigService } from '@nestjs/config';
+
+@Injectable()
+export class DockerService {
+  private readonly logger = new Logger(DockerService.name);
+  private readonly dockerApi: AxiosInstance;
+
+  constructor(private readonly configService: ConfigService) {
+    const dockerHost = this.configService.get<string>('DOCKER_HOST') || 'http://localhost:2375';
+    this.dockerApi = axios.create({
+      baseURL: dockerHost,
+      timeout: 5000, // 5 seconds timeout
+    });
+  }
+
+  // List Docker containers
+  async listContainers(): Promise<any> {
+    try {
+      const response = await this.dockerApi.get('/containers/json?all=1');
+      return response.data;
+    } catch (error) {
+      this.logger.error('Failed to list Docker containers', error.message);
+      throw new InternalServerErrorException('Failed to list Docker containers');
+    }
+  }
+
+  // Start a Docker container
+  async startContainer(containerId: string): Promise<any> {
+    try {
+      const response = await this.dockerApi.post(`/containers/${containerId}/start`);
+      return { message: `Container ${containerId} started successfully.` };
+    } catch (error) {
+      this.logger.error(`Failed to start Docker container: ${containerId}`, error.message);
+      throw new InternalServerErrorException(`Failed to start Docker container: ${containerId}`);
+    }
+  }
+
+  // Stop a Docker container
+  async stopContainer(containerId: string): Promise<any> {
+    try {
+      const response = await this.dockerApi.post(`/containers/${containerId}/stop`);
+      return { message: `Container ${containerId} stopped successfully.` };
+    } catch (error) {
+      this.logger.error(`Failed to stop Docker container: ${containerId}`, error.message);
+      throw new InternalServerErrorException(`Failed to stop Docker container: ${containerId}`);
+    }
+  }
+
+  // Remove a Docker container
+  async removeContainer(containerId: string): Promise<any> {
+    try {
+      const response = await this.dockerApi.delete(`/containers/${containerId}?force=true`);
+      return { message: `Container ${containerId} removed successfully.` };
+    } catch (error) {
+      this.logger.error(`Failed to remove Docker container: ${containerId}`, error.message);
+      throw new InternalServerErrorException(`Failed to remove Docker container: ${containerId}`);
+    }
+  }
+
+  // Get Docker container logs
+  async getContainerLogs(containerId: string): Promise<any> {
+    try {
+      const response = await this.dockerApi.get(`/containers/${containerId}/logs?stdout=1&stderr=1&timestamps=1`);
+      return response.data;
+    } catch (error) {
+      this.logger.error(`Failed to get logs for Docker container: ${containerId}`, error.message);
+      throw new InternalServerErrorException(`Failed to get logs for Docker container: ${containerId}`);
+    }
+  }
+}
+
+
+
+// ./src/jenkins/jenkins.controller.ts
+import { Controller, Get, Post, Param, UseGuards, Logger } from '@nestjs/common';
+import { JenkinsService } from './jenkins.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { UserRole } from '../users/user.entity';
+
+@Controller('jenkins')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+export class JenkinsController {
+  private readonly logger = new Logger(JenkinsController.name);
+
+  constructor(private readonly jenkinsService: JenkinsService) { }
+
+  @Get('jobs')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async getJobs() {
+    this.logger.log('Fetching Jenkins jobs');
+    return this.jenkinsService.getJobs();
+  }
+
+  @Post('trigger/:jobName')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async triggerJob(@Param('jobName') jobName: string) {
+    this.logger.log(`Triggering Jenkins job: ${jobName}`);
+    return this.jenkinsService.triggerJob(jobName);
+  }
+
+  @Get('status/:jobName')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  async getLastBuildStatus(@Param('jobName') jobName: string) {
+    this.logger.log(`Fetching last build status for job: ${jobName}`);
+    return this.jenkinsService.getLastBuildStatus(jobName);
+  }
+}
+
+
+
+// ./src/jenkins/jenkins.module.ts
+// backend/src/jenkins/jenkins.module.ts
+
+import { Module } from '@nestjs/common';
+import { JenkinsService } from './jenkins.service';
+import { JenkinsController } from './jenkins.controller';
+import { ConfigModule } from '@nestjs/config';
+
+@Module({
+  imports: [ConfigModule],
+  providers: [JenkinsService],
+  controllers: [JenkinsController],
+  exports: [JenkinsService],
+})
+export class JenkinsModule {}
+
+
+
+// ./src/jenkins/jenkins.service.ts
+// backend/src/jenkins/jenkins.service.ts
+
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import axios, { AxiosInstance } from 'axios';
+import { ConfigService } from '@nestjs/config';
+
+@Injectable()
+export class JenkinsService {
+  private readonly logger = new Logger(JenkinsService.name);
+  private readonly jenkinsApi: AxiosInstance;
+
+  constructor(private readonly configService: ConfigService) {
+    const jenkinsUrl = this.configService.get<string>('JENKINS_URL');
+    const jenkinsUser = this.configService.get<string>('JENKINS_USER');
+    const jenkinsToken = this.configService.get<string>('JENKINS_TOKEN');
+
+    if (!jenkinsUrl || !jenkinsUser || !jenkinsToken) {
+      this.logger.error('Jenkins configuration is missing in environment variables.');
+      throw new UnauthorizedException('Jenkins configuration is incomplete.');
+    }
+
+    this.jenkinsApi = axios.create({
+      baseURL: jenkinsUrl,
+      auth: {
+        username: jenkinsUser,
+        password: jenkinsToken,
+      },
+    });
+  }
+
+  // Get list of Jenkins jobs
+  async getJobs(): Promise<any> {
+    try {
+      const response = await this.jenkinsApi.get('/api/json?tree=jobs[name,color]');
+      return response.data.jobs;
+    } catch (error) {
+      this.logger.error('Failed to fetch Jenkins jobs', error.message);
+      throw error;
+    }
+  }
+
+  // Trigger a Jenkins job build
+  async triggerJob(jobName: string): Promise<any> {
+    try {
+      const response = await this.jenkinsApi.post(`/job/${encodeURIComponent(jobName)}/build`);
+      if (response.status === 201) {
+        this.logger.log(`Triggered Jenkins job: ${jobName}`);
+        return { message: `Triggered Jenkins job: ${jobName}` };
+      }
+      throw new Error(`Unexpected response status: ${response.status}`);
+    } catch (error) {
+      this.logger.error(`Failed to trigger Jenkins job: ${jobName}`, error.message);
+      throw error;
+    }
+  }
+
+  // Get last build status of a job
+  async getLastBuildStatus(jobName: string): Promise<any> {
+    try {
+      const response = await this.jenkinsApi.get(`/job/${encodeURIComponent(jobName)}/lastBuild/api/json`);
+      return {
+        result: response.data.result,
+        duration: response.data.duration,
+        timestamp: response.data.timestamp,
+      };
+    } catch (error) {
+      this.logger.error(`Failed to fetch last build status for job: ${jobName}`, error.message);
+      throw error;
+    }
+  }
+}
+
+
+
+// ./src/main.ts
+// backend/src/main.ts
+import 'newrelic';
+import { ValidationPipe } from '@nestjs/common';
+import { NestFactory, Reflector } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { RolesGuard } from './auth/roles.guard';
+import { Logger } from '@nestjs/common';
+import { LoggingMiddleware } from './middleware/logging.middleware';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+
+  app.enableCors();
+  app.useGlobalPipes(new ValidationPipe());
+  const reflector = app.get(Reflector);
+  app.useGlobalGuards(new RolesGuard(reflector));
+
+  const config = new DocumentBuilder().setTitle('Cicd Monitorer Server').setVersion('1.0').build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
+  await app.listen(3000);
+  Logger.log('Backend is running on http://localhost:3000', 'Bootstrap');
+}
+bootstrap();
+
+
+
+// ./src/middleware/logging.middleware.ts
+// backend/src/common/middleware/logging.middleware.ts
+
+import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import axios from 'axios';
+
+@Injectable()
+export class LoggingMiddleware implements NestMiddleware {
+  private readonly logger = new Logger(LoggingMiddleware.name);
+  private readonly newRelicLogEndpoint = 'https://log-api.newrelic.com/log/v1';
+  private readonly newRelicInsertKey = process.env.NEW_RELIC_LOG_INSERT_KEY;
+
+  use(req: Request, res: Response, next: NextFunction) {
+    const { method, originalUrl } = req;
+    const userAgent = req.get('user-agent') || '';
+    const ip = req.ip;
+
+    res.on('finish', () => {
+      const { statusCode } = res;
+      const contentLength = res.get('content-length');
+
+      const logMessage = `${method} ${originalUrl} ${statusCode} ${contentLength || 0} - ${userAgent} ${ip}`;
+      this.logger.log(logMessage);
+
+      this.sendLogToNewRelic('info', logMessage, {
+        method,
+        originalUrl,
+        statusCode,
+        contentLength,
+        userAgent,
+        ip,
+      });
+    });
+
+    next();
+  }
+
+  private async sendLogToNewRelic(level: string, message: string, meta: any) {
+    if (!this.newRelicInsertKey) {
+      this.logger.warn('New Relic Insert Key not configured');
+      return;
+    }
+
+    try {
+      await axios.post(
+        this.newRelicLogEndpoint,
+        [
+          {
+            message,
+            level,
+            ...meta,
+          },
+        ],
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Api-Key': this.newRelicInsertKey,
+          },
+        },
+      );
+    } catch (error) {
+      this.logger.error('Failed to send log to New Relic:', error.message);
+    }
+  }
+}
+
+
+
+// ./src/monitoring/monitoring.controller.ts
+// backend/src/monitoring/monitoring.controller.ts
+
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { MonitoringService } from './monitoring.service';
+import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../auth/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { UserRole } from '../users/user.entity';
+
+@Controller('monitoring')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+export class MonitoringController {
+  constructor(private readonly monitoringService: MonitoringService) {}
+
+  // Get current system metrics
+  @Get('system')
+  @Roles(UserRole.ADMIN, UserRole.USER)
+  getSystemMetrics() {
+    return this.monitoringService.getSystemMetrics();
+  }
+}
+
+
+
+// ./src/monitoring/monitoring.gateway.ts
+// backend/src/monitoring/monitoring.gateway.ts
+
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  OnGatewayInit,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+} from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { MonitoringService } from './monitoring.service';
+import { Logger, Injectable } from '@nestjs/common';
+import { AuthService } from '../auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
+
+@WebSocketGateway({
+  cors: {
+    origin: '*', // Adjust as needed for security
+  },
+})
+@Injectable()
+export class MonitoringGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
+{
+  @WebSocketServer() server: Server;
+  private logger: Logger = new Logger('MonitoringGateway');
+
+  constructor(
+    private readonly monitoringService: MonitoringService,
+    private readonly jwtService: JwtService,
+  ) {}
+
+  afterInit(server: Server) {
+    this.logger.log('WebSocket server initialized');
+    // Start emitting metrics at intervals
+    setInterval(() => {
+      const metrics = this.monitoringService.getSystemMetrics();
+      this.server.emit('systemMetrics', metrics);
+    }, 5000); // every 5 seconds
+  }
+
+  handleConnection(client: Socket, ...args: any[]) {
+    this.logger.log(`Client connected: ${client.id}`);
+
+    // Optionally, authenticate the client
+    const token = client.handshake.auth.token;
+    if (token) {
+      try {
+        const payload = this.jwtService.verify(token, {
+          secret: process.env.JWT_SECRET,
+        });
+        client.data.user = payload;
+        this.logger.log(`Client authenticated: ${client.id}`);
+      } catch (error) {
+        this.logger.warn(`Client authentication failed: ${client.id}`);
+        client.disconnect();
+      }
+    } else {
+      this.logger.warn(`No token provided by client: ${client.id}`);
+      client.disconnect();
+    }
+  }
+
+  handleDisconnect(client: Socket) {
+    this.logger.log(`Client disconnected: ${client.id}`);
+  }
+}
+
+
+
+// ./src/monitoring/monitoring.module.ts
+// backend/src/monitoring/monitoring.module.ts
+
+import { Module } from '@nestjs/common';
+import { MonitoringService } from './monitoring.service';
+import { MonitoringController } from './monitoring.controller';
+import { MonitoringGateway } from './monitoring.gateway';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+
+@Module({
+  imports: [JwtModule, ConfigModule],
+  providers: [MonitoringService, MonitoringGateway],
+  controllers: [MonitoringController],
+})
+export class MonitoringModule {}
+
+
+
+// ./src/monitoring/monitoring.service.ts
+// backend/src/monitoring/monitoring.service.ts
+
+import { Injectable } from '@nestjs/common';
+import * as os from 'os';
+
+@Injectable()
+export class MonitoringService {
+  // Retrieve current system metrics
+  getSystemMetrics() {
+    const metrics = {
+      cpuLoad: this.getCpuLoad(),
+      freeMemory: os.freemem(),
+      totalMemory: os.totalmem(),
+      usedMemory: os.totalmem() - os.freemem(),
+      uptime: os.uptime(),
+      diskUsage: this.getDiskUsage(), // Placeholder for actual disk usage
+      networkInterfaces: os.networkInterfaces(),
+    };
+    return metrics;
+  }
+
+  // Calculate CPU load average
+  private getCpuLoad() {
+    const cpus = os.cpus();
+    const numCores = cpus.length;
+    const loadAverages = os.loadavg(); // [1min, 5min, 15min]
+    return {
+      cores: numCores,
+      loadAverages,
+    };
+  }
+
+  // Placeholder for disk usage; requires additional modules or system commands
+  private getDiskUsage() {
+    // Disk usage calculation can be implemented using external packages or OS-specific commands
+    // For simplicity, we'll return null or a dummy value
+    return null;
+  }
+}
+
+
+
+// ./src/notifications/notifications.controller.ts
+// backend/src/notifications/notifications.controller.ts
+
+import { Controller } from '@nestjs/common';
+
+@Controller('notifications')
+export class NotificationsController {}
+
+
+
+// ./src/notifications/notifications.module.ts
+// backend/src/notifications/notifications.module.ts
+
+import { Module } from '@nestjs/common';
+import { NotificationsService } from './notifications.service';
+import { NotificationsController } from './notifications.controller';
+import { ConfigModule } from '@nestjs/config';
+
+@Module({
+  imports: [ConfigModule],
+  providers: [NotificationsService],
+  controllers: [NotificationsController],
+  exports: [NotificationsService],
+})
+export class NotificationsModule {}
+
+
+
+// ./src/notifications/notifications.service.ts
+// backend/src/notifications/notifications.service.ts
+
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import * as nodemailer from 'nodemailer';
+import { ConfigService } from '@nestjs/config';
+
+@Injectable()
+export class NotificationsService {
+  private transporter: nodemailer.Transporter;
+
+  constructor(private configService: ConfigService) {
+    this.transporter = nodemailer.createTransport({
+      host: this.configService.get<string>('EMAIL_HOST'),
+      port: parseInt(this.configService.get<string>('EMAIL_PORT'), 10),
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: this.configService.get<string>('EMAIL_USER'),
+        pass: this.configService.get<string>('EMAIL_PASS'),
+      },
+    });
+  }
+
+  // Send an email
+  async sendEmail(
+    to: string,
+    subject: string,
+    html: string,
+  ): Promise<void> {
+    const mailOptions: nodemailer.SendMailOptions = {
+      from: `"DevOps Dashboard" <${this.configService.get<string>('EMAIL_USER')}>`,
+      to,
+      subject,
+      html,
+    };
+
+    try {
+      await this.transporter.sendMail(mailOptions);
+    } catch (error) {
+      console.error('Error sending email:', error);
+      throw new InternalServerErrorException('Failed to send email');
+    }
+  }
+}
+
+
+
+// ./src/projects/dto/connect-repo.dto.ts
+// backend/src/projects/dto/connect-repo.dto.ts
+
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsUrl } from 'class-validator';
+
+export class ConnectRepoDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsUrl()
+  repositoryUrl: string;
+}
+
+
+
+// ./src/projects/dto/create-project.dto.ts
+// backend/src/projects/dto/create-project.dto.ts
+
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsNotEmpty,
+  IsUrl,
+  IsOptional,
+  IsBoolean,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+
+export class CreateProjectDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(100)
+  name: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @ApiProperty()
+  @IsUrl()
+  repositoryUrl: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+}
+
+
+
+// ./src/projects/dto/update-project.dto.ts
+// backend/src/projects/dto/update-project.dto.ts
+
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateProjectDto } from './create-project.dto';
+
+export class UpdateProjectDto extends PartialType(CreateProjectDto) {}
+
+
+
+// ./src/projects/project.entity.ts
+// backend/src/projects/project.entity.ts
+
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    ManyToOne,
+    JoinColumn,
+    CreateDateColumn,
+  } from 'typeorm';
+  import { User } from '../users/user.entity';
+  
+  @Entity()
+  export class Project {
+    @PrimaryGeneratedColumn()
+    id: number;
+  
+    @Column({ length: 100 })
+    name: string;
+  
+    @Column({ nullable: true })
+    description: string;
+  
+    @Column()
+    repositoryUrl: string;
+  
+    @Column({ nullable: true })
+    githubRepoId: number; // GitHub repository ID
+  
+    @Column({ nullable: true })
+    webhookSecret: string; // Secret for verifying GitHub webhooks
+  
+    @Column({ default: false })
+    isWebhookActive: boolean;
+  
+    @ManyToOne(() => User, (user) => user.projects, { onDelete: 'CASCADE' })
+    @JoinColumn({ name: 'createdBy' })
+    createdBy: User;
+  
+    @CreateDateColumn()
+    createdAt: Date;
+  }
+  
+
+
+// ./src/projects/projects.controller.ts
+import {
+    Controller,
+    Get,
+    Post,
+    Body,
+    Param,
+    Put,
+    Delete,
+    UseGuards,
+    Req,
+  } from '@nestjs/common';
+  import { ProjectsService } from './projects.service';
+  import { CreateProjectDto } from './dto/create-project.dto';
+  import { UpdateProjectDto } from './dto/update-project.dto';
+  import { ConnectRepoDto } from './dto/connect-repo.dto';
+  import { AuthGuard } from '@nestjs/passport';
+  import { RolesGuard } from '../auth/roles.guard';
+  import { Roles } from '../auth/roles.decorator';
+  import { UserRole } from '../users/user.entity';
+  
+  @Controller('projects')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  export class ProjectsController {
+    constructor(private readonly projectsService: ProjectsService) {}
+  
+    @Post()
+    @Roles(UserRole.ADMIN, UserRole.USER)
+    async create(
+      @Body() createProjectDto: CreateProjectDto,
+      @Req() req,
+    ) {
+      return this.projectsService.create(createProjectDto, req.user);
+    }
+  
+    @Get()
+    @Roles(UserRole.ADMIN, UserRole.USER)
+    async findAll(@Req() req) {
+      return this.projectsService.findAll(req.user);
+    }
+  
+    @Get(':id')
+    @Roles(UserRole.ADMIN, UserRole.USER)
+    async findOne(@Param('id') id: string, @Req() req) {
+      return this.projectsService.findOne(+id, req.user);
+    }
+  
+    @Put(':id')
+    @Roles(UserRole.ADMIN, UserRole.USER)
+    async update(
+      @Param('id') id: string,
+      @Body() updateProjectDto: UpdateProjectDto,
+      @Req() req,
+    ) {
+      return this.projectsService.update(+id, updateProjectDto, req.user);
+    }
+  
+    @Delete(':id')
+    @Roles(UserRole.ADMIN, UserRole.USER)
+    async remove(@Param('id') id: string, @Req() req) {
+      await this.projectsService.remove(+id, req.user);
+      return { message: 'Project deleted successfully.' };
+    }
+  
+    @Post(':id/connect-repo')
+    @Roles(UserRole.ADMIN, UserRole.USER)
+    async connectRepository(
+      @Param('id') id: string,
+      @Body() connectRepoDto: ConnectRepoDto,
+      @Req() req,
+    ) {
+      return this.projectsService.connectRepository(+id, connectRepoDto, req.user);
+    }
+  }
+  
+
+
+// ./src/projects/projects.module.ts
+// backend/src/projects/projects.module.ts
+
+import { Module } from '@nestjs/common';
+import { ProjectsService } from './projects.service';
+import { ProjectsController } from './projects.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Project } from './project.entity';
+import { UsersModule } from '../users/users.module';
+import { NotificationsModule } from '../notifications/notifications.module';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Project]), UsersModule, NotificationsModule],
+  providers: [ProjectsService],
+  controllers: [ProjectsController],
+  exports: [ProjectsService],
+})
+export class ProjectsModule {}
+
+
+
+// ./src/projects/projects.service.ts
+// backend/src/projects/projects.service.ts
+
+import {
+    Injectable,
+    NotFoundException,
+    ForbiddenException,
+    BadRequestException,
+  } from '@nestjs/common';
+  import { InjectRepository } from '@nestjs/typeorm';
+  import { Repository } from 'typeorm';
+  import { Project } from './project.entity';
+  import { CreateProjectDto } from './dto/create-project.dto';
+  import { UpdateProjectDto } from './dto/update-project.dto';
+  import { ConnectRepoDto } from './dto/connect-repo.dto';
+  import { User, UserRole } from '../users/user.entity';
+  import { v4 as uuidv4 } from 'uuid';
+  import axios from 'axios';
+  import { ConfigService } from '@nestjs/config';
+  import { NotificationsService } from '../notifications/notifications.service';
+  
+  @Injectable()
+  export class ProjectsService {
+    constructor(
+      @InjectRepository(Project)
+      private projectsRepository: Repository<Project>,
+      private configService: ConfigService,
+      private notificationsService: NotificationsService,
+    ) {}
+  
+    // Create a new project
+    async create(
+      createProjectDto: CreateProjectDto,
+      user: User,
+    ): Promise<Project> {
+      const project = this.projectsRepository.create({
+        ...createProjectDto,
+        createdBy: user,
+      });
+      return this.projectsRepository.save(project);
+    }
+  
+    // Retrieve all projects based on user role
+    async findAll(user: User): Promise<Project[]> {
+      if (user.role === UserRole.ADMIN) {
+        return this.projectsRepository.find({ relations: ['createdBy'] });
+      }
+      return this.projectsRepository.find({
+        where: { createdBy: user },
+        relations: ['createdBy'],
+      });
+    }
+  
+    // Retrieve a single project
+    async findOne(id: number, user: User): Promise<Project> {
+      const project = await this.projectsRepository.findOne({
+        where: { id },
+        relations: ['createdBy'],
+      });
+      if (!project) {
+        throw new NotFoundException('Project not found');
+      }
+      if (user.role !== UserRole.ADMIN && project.createdBy.id !== user.id) {
+        throw new ForbiddenException('Access denied');
+      }
+      return project;
+    }
+  
+    // Update a project
+    async update(
+      id: number,
+      updateProjectDto: UpdateProjectDto,
+      user: User,
+    ): Promise<Project> {
+      const project = await this.findOne(id, user);
+      Object.assign(project, updateProjectDto);
+      return this.projectsRepository.save(project);
+    }
+  
+    // Delete a project
+    async remove(id: number, user: User): Promise<void> {
+      const project = await this.findOne(id, user);
+      await this.projectsRepository.remove(project);
+    }
+  
+    // Connect GitHub repository and set up webhook
+    async connectRepository(
+      id: number,
+      connectRepoDto: ConnectRepoDto,
+      user: User,
+    ): Promise<Project> {
+      const project = await this.findOne(id, user);
+  
+      // Extract owner and repo name from repositoryUrl
+      const regex = /https:\/\/github\.com\/([^\/]+)\/([^\/]+)(\.git)?$/;
+      const match = connectRepoDto.repositoryUrl.match(regex);
+      if (!match) {
+        throw new BadRequestException('Invalid GitHub repository URL');
+      }
+      const owner = match[1];
+      const repo = match[2];
+  
+      // Generate a unique webhook secret
+      const webhookSecret = uuidv4();
+  
+      // Create GitHub webhook
+      try {
+        // To create a webhook, authenticate with GitHub using a token with admin:repo_hook permissions
+        const githubToken = this.configService.get<string>('GITHUB_TOKEN');
+        if (!githubToken) {
+          throw new Error('GitHub token not configured');
+        }
+  
+        const response = await axios.post(
+          `https://api.github.com/repos/${owner}/${repo}/hooks`,
+          {
+            name: 'web',
+            active: true,
+            events: ['push', 'pull_request'],
+            config: {
+              url: `${this.configService.get<string>('HOST_URL')}/webhooks/github`,
+              content_type: 'json',
+              secret: webhookSecret,
+              insecure_ssl: '0',
+            },
+          },
+          {
+            headers: {
+              Authorization: `token ${githubToken}`,
+              Accept: 'application/vnd.github.v3+json',
+            },
+          },
+        );
+  
+        if (response.status === 201) {
+          project.githubRepoId = response.data.id;
+          project.webhookSecret = webhookSecret;
+          project.isWebhookActive = true;
+          await this.projectsRepository.save(project);
+          return project;
+        } else {
+          throw new Error('Failed to create GitHub webhook');
+        }
+      } catch (error) {
+        throw new BadRequestException(
+          `Error connecting to GitHub repository: ${error.message}`,
+        );
+      }
+    }
+  }
+  
+
+
+// ./src/users/dto/create-user.dto.ts
+// backend/src/users/dto/create-user.dto.ts
+
+import { ApiProperty } from '@nestjs/swagger';
+import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+
+export class CreateUserDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  name: string;
+
+  @ApiProperty()
+  @IsEmail()
+  email: string;
+
+  @ApiProperty()
+  @MinLength(6)
+  password: string;
+}
+
+
+
+// ./src/users/user.entity.ts
+// backend/src/users/user.entity.ts
+
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    BeforeInsert,
+    OneToMany,
+  } from 'typeorm';
+  import * as bcrypt from 'bcrypt';
+  import { Project } from '../projects/project.entity';
+  
+  export enum UserRole {
+    ADMIN = 'admin',
+    USER = 'user',
+  }
+  
+  @Entity()
+  export class User {
+    @PrimaryGeneratedColumn()
+    id: number;
+  
+    @Column({ length: 100 })
+    name: string;
+  
+    @Column({ unique: true })
+    email: string;
+  
+    @Column()
+    password: string;
+  
+    @Column({
+      type: 'enum',
+      enum: UserRole,
+      default: UserRole.USER,
+    })
+    role: UserRole;
+  
+    @OneToMany(() => Project, (project) => project.createdBy)
+    projects: Project[];
+  
+    @BeforeInsert()
+    async hashPassword() {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
+  }
+  
+
+
+// ./src/users/users.controller.ts
+// backend/src/users/users.controller.ts
+
+import {
+    Controller,
+    Post,
+    Body,
+    HttpException,
+    HttpStatus,
+    Get,
+    UseGuards,
+    Req,
+  } from '@nestjs/common';
+  import { UsersService } from './users.service';
+  import { CreateUserDto } from './dto/create-user.dto';
+  import { User } from './user.entity';
+  import { AuthGuard } from '@nestjs/passport';
+  import { RolesGuard } from '../auth/roles.guard';
+  import { Roles } from '../auth/roles.decorator';
+  import { UserRole } from './user.entity';
+  
+  @Controller('users')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  export class UsersController {
+    constructor(private readonly usersService: UsersService) {}
+  
+    // Registration endpoint (Public)
+    @Post('register')
+    async register(
+      @Body() createUserDto: CreateUserDto,
+    ): Promise<User> {
+      const existingUser = await this.usersService.findByEmail(createUserDto.email);
+      if (existingUser) {
+        throw new HttpException('Email already in use', HttpStatus.BAD_REQUEST);
+      }
+      const user = await this.usersService.create(createUserDto);
+      return user;
+    }
+  
+    // Profile endpoint (Protected)
+    @Get('profile')
+    @Roles(UserRole.ADMIN, UserRole.USER)
+    async getProfile(@Req() req): Promise<User> {
+      return req.user;
+    }
+  
+    // Admin-only endpoint (Example)
+    @Get('admin-only')
+    @Roles(UserRole.ADMIN)
+    async adminOnly(@Req() req) {
+      return { message: 'This is an admin-only route.' };
+    }
+  }
+  
+
+
+// ./src/users/users.module.ts
+// backend/src/users/users.module.ts
+
+import { Module } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { UsersController } from './users.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './user.entity';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([User])],
+  providers: [UsersService],
+  controllers: [UsersController],
+  exports: [UsersService],
+})
+export class UsersModule {}
+
+
+
+// ./src/users/users.service.ts
+// backend/src/users/users.service.ts
+
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm/index';
+import { User, UserRole } from './user.entity';
+import { CreateUserDto } from './dto/create-user.dto';
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
+  ) {}
+
+  // Create a new user
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const user = this.usersRepository.create(createUserDto);
+    return this.usersRepository.save(user);
+  }
+
+  // Find user by email
+  async findByEmail(email: string): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { email } });
+  }
+
+  // Find user by ID
+  async findById(id: number): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where: { id } });
+  }
+}
+
+
+
+// ./src/webhooks/webhooks.controller.ts
+// backend/src/webhooks/webhooks.controller.ts
+
+import {
+    Controller,
+    Post,
+    Req,
+    Headers,
+    Body,
+    HttpCode,
+    HttpStatus,
+  } from '@nestjs/common';
+  import { WebhooksService } from './webhooks.service';
+  import { Request } from 'express';
+  
+  @Controller('webhooks')
+  export class WebhooksController {
+    constructor(private readonly webhooksService: WebhooksService) {}
+  
+    // GitHub webhook endpoint
+    @Post('github')
+    @HttpCode(HttpStatus.NO_CONTENT)
+    async handleGitHubWebhook(
+      @Headers() headers,
+      @Body() body: any,
+      @Req() req: Request,
+    ) {
+      try {
+        await this.webhooksService.handleGitHubWebhook(headers, body);
+      } catch (error) {
+        // Optionally, log the error
+        // Re-throw the error to return appropriate HTTP status
+        throw error;
+      }
+    }
+  }
+  
+
+
+// ./src/webhooks/webhooks.module.ts
+// backend/src/webhooks/webhooks.module.ts
+
+import { Module } from '@nestjs/common';
+import { WebhooksService } from './webhooks.service';
+import { WebhooksController } from './webhooks.controller';
+import { ProjectsModule } from '../projects/projects.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Project } from '../projects/project.entity';
+import { CicdModule } from '../cicd/cicd.module';
+
+@Module({
+  imports: [ProjectsModule, TypeOrmModule.forFeature([Project]), CicdModule],
+  providers: [WebhooksService],
+  controllers: [WebhooksController],
+})
+export class WebhooksModule {}
+
+
+
+// ./src/webhooks/webhooks.service.ts
+// backend/src/webhooks/webhooks.service.ts
+
+import {
+    Injectable,
+    BadRequestException,
+    Logger,
+  } from '@nestjs/common';
+  import { ProjectsService } from '../projects/projects.service';
+  import { Project } from '../projects/project.entity';
+  import { Repository } from 'typeorm';
+  import { InjectRepository } from '@nestjs/typeorm';
+  import * as crypto from 'crypto';
+  import { CicdService } from '../cicd/cicd.service';
+  import { CICDEvent, BuildStatus } from '../cicd/cicd.entity';
+  
+  @Injectable()
+  export class WebhooksService {
+    private readonly logger = new Logger(WebhooksService.name);
+  
+    constructor(
+      private readonly projectsService: ProjectsService,
+      private readonly cicdService: CicdService,
+      @InjectRepository(Project)
+      private projectsRepository: Repository<Project>,
+    ) {}
+  
+    // Verify GitHub webhook signature
+    verifySignature(
+      payload: Buffer,
+      signature: string,
+      secret: string,
+    ): boolean {
+      const hmac = crypto.createHmac('sha256', secret);
+      hmac.update(payload);
+      const digest = 'sha256=' + hmac.digest('hex');
+      return crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(signature));
+    }
+  
+    // Handle incoming webhook events
+    async handleGitHubWebhook(headers: any, body: any): Promise<void> {
+      const signature = headers['x-hub-signature-256'];
+      const event = headers['x-github-event'];
+      const delivery = headers['x-github-delivery'];
+  
+      if (!signature) {
+        throw new BadRequestException('Missing signature');
+      }
+  
+      const repositoryId = body.repository.id;
+  
+      // Find the project with the matching GitHub repository ID
+      const project = await this.projectsRepository.findOne({
+        where: { githubRepoId: repositoryId, isWebhookActive: true },
+      });
+  
+      if (!project) {
+        this.logger.warn(
+          `No active project found for repository ID: ${repositoryId}`,
+        );
+        return;
+      }
+  
+      // Verify signature
+      const isValid = this.verifySignature(
+        Buffer.from(JSON.stringify(body)),
+        signature,
+        project.webhookSecret,
+      );
+  
+      if (!isValid) {
+        throw new BadRequestException('Invalid signature');
+      }
+  
+      // Process the event
+      this.logger.log(
+        `Received event ${event} for project ${project.name}`,
+      );
+  
+      // Handle specific events
+      switch (event) {
+        case 'push':
+          await this.handlePushEvent(project, body);
+          break;
+        case 'pull_request':
+          await this.handlePullRequestEvent(project, body);
+          break;
+        // Add more cases as needed
+        default:
+          this.logger.warn(`Unhandled event type: ${event}`);
+      }
+    }
+  
+    // Handle Push Events
+    async handlePushEvent(project: Project, body: any): Promise<void> {
+      const commitSha = body.after;
+      const branch = body.ref.split('/').pop();
+  
+      // Determine build status based on commit statuses
+      // For simplicity, assume a successful build if no failures are reported
+      // In a real-world scenario, integrate with GitHub Status API or CI tool APIs
+  
+      // Example: Create a CI_CD event with status IN_PROGRESS
+      const cicdEventInProgress = await this.cicdService.createCICDEvent(
+        project,
+        'push',
+        BuildStatus.IN_PROGRESS,
+        commitSha,
+        branch,
+      );
+  
+      // TODO: Integrate with CI tool to trigger build and update status accordingly
+      // For demonstration, we'll simulate a successful build after some processing
+  
+      // Simulate build success after processing
+      await this.cicdService.createCICDEvent(
+        project,
+        'push',
+        BuildStatus.SUCCESS,
+        commitSha,
+        branch,
+      );
+    }
+  
+    // Handle Pull Request Events
+    async handlePullRequestEvent(project: Project, body: any): Promise<void> {
+      const action = body.action;
+      const pullRequest = body.pull_request;
+      const commitSha = pullRequest.head.sha;
+      const branch = pullRequest.head.ref;
+  
+      if (action === 'opened' || action === 'synchronize') {
+        // Create a CI_CD event with status IN_PROGRESS
+        const cicdEventInProgress = await this.cicdService.createCICDEvent(
+          project,
+          'pull_request',
+          BuildStatus.IN_PROGRESS,
+          commitSha,
+          branch,
+        );
+  
+        // TODO: Integrate with CI tool to trigger build and update status accordingly
+        // For demonstration, we'll simulate a successful build after some processing
+  
+        // Simulate build success after processing
+        await this.cicdService.createCICDEvent(
+          project,
+          'pull_request',
+          BuildStatus.SUCCESS,
+          commitSha,
+          branch,
+        );
+      } else if (action === 'closed') {
+        if (body.pull_request.merged) {
+          // Handle merged pull request
+          await this.cicdService.createCICDEvent(
+            project,
+            'pull_request',
+            BuildStatus.SUCCESS,
+            body.pull_request.merge_commit_sha,
+            body.pull_request.base.ref,
+          );
+        } else {
+          // Handle pull request closed without merge
+          await this.cicdService.createCICDEvent(
+            project,
+            'pull_request',
+            BuildStatus.FAILURE,
+            body.pull_request.head.sha,
+            body.pull_request.head.ref,
+          );
+        }
+      }
+    }
+  }
+  
+
+
+// ./tsconfig.json
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
+  }
+}
+
+
+
