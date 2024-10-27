@@ -1,6 +1,6 @@
 // src/components/Widgets/SystemMetricsWidget.tsx
 
-import React from 'react';
+import React from "react";
 import {
   Card,
   CardHeader,
@@ -13,8 +13,8 @@ import {
   AlertIcon,
   VStack,
   Progress,
-} from '@chakra-ui/react';
-import useFetchSystemMetrics from '../../hooks/useFetchSystemMetrics';
+} from "@chakra-ui/react";
+import useFetchSystemMetrics from "../../hooks/useFetchSystemMetrics";
 
 const SystemMetricsWidget = () => {
   const { data, isLoading, isError } = useFetchSystemMetrics();
@@ -51,7 +51,7 @@ const SystemMetricsWidget = () => {
   }
 
   if (!data) {
-    return <Text>No Data found</Text>
+    return <Text>No Data found</Text>;
   }
 
   return (
@@ -62,11 +62,18 @@ const SystemMetricsWidget = () => {
       <CardBody>
         <VStack align="start" spacing={3}>
           <Text>
-            <strong>CPU Load Averages:</strong> {data.cpuLoad.map((load) => load.toFixed(2)).join(', ')}
+            <strong>CPU Load Averages:</strong>{" "}
+            {data.cpuLoad.loadAverages
+              .map((load) => load.toFixed(2))
+              .join(", ")}
           </Text>
           <Text>
-            <strong>Memory Usage:</strong> {(data.usedMemory / (1024 ** 3)).toFixed(2)} GB /{' '}
-            {(data.totalMemory / (1024 ** 3)).toFixed(2)} GB
+            <strong>Cores: </strong> {data.cpuLoad.cores}
+          </Text>
+          <Text>
+            <strong>Memory Usage:</strong>{" "}
+            {(data.usedMemory / 1024 ** 3).toFixed(2)} GB /{" "}
+            {(data.totalMemory / 1024 ** 3).toFixed(2)} GB
           </Text>
           <Progress
             value={(data.usedMemory / data.totalMemory) * 100}
@@ -75,10 +82,12 @@ const SystemMetricsWidget = () => {
             borderRadius="md"
           />
           <Text>
-            <strong>Free Memory:</strong> {(data.freeMemory / (1024 ** 3)).toFixed(2)} GB
+            <strong>Free Memory:</strong>{" "}
+            {(data.freeMemory / 1024 ** 3).toFixed(2)} GB
           </Text>
           <Text>
-            <strong>Uptime:</strong> {Math.floor(data.uptime / 3600)}h {Math.floor((data.uptime % 3600) / 60)}m
+            <strong>Uptime:</strong> {Math.floor(data.uptime / 3600)}h{" "}
+            {Math.floor((data.uptime % 3600) / 60)}m
           </Text>
         </VStack>
       </CardBody>

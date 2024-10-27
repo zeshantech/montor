@@ -14,14 +14,12 @@ interface TriggerWorkflowResponse {
 const useTriggerWorkflow = () => {
   const { API } = useApi();
   const queryClient = useQueryClient();
+  
 
   return useMutation<TriggerWorkflowResponse, Error, TriggerWorkflowData>({
     mutationFn: async (data: TriggerWorkflowData) => {
       const response = await API.post(
-        `/cicd/workflow/${encodeURIComponent(data.workflowName)}/trigger`,
-        {
-          projectId: data.projectId,
-        }
+        `/cicd/workflow/${data.projectId}/trigger/${encodeURIComponent(data.workflowName)}`,
       );
       return response.data;
     },

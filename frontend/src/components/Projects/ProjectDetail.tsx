@@ -1,6 +1,4 @@
-// src/components/Projects/ProjectDetail.tsx
-
-import React, { useState } from 'react';
+import { useState } from "react";
 import {
   Box,
   Heading,
@@ -11,20 +9,16 @@ import {
   Alert,
   AlertIcon,
   VStack,
-} from '@chakra-ui/react';
-import { useParams, useNavigate } from 'react-router-dom';
-import useFetchProject from '../../hooks/useFetchProject';
-import useUpdateProject from '../../hooks/useUpdateProject';
-import useConnectRepo from '../../hooks/useConnectRepo';
-import ProjectFormModal from './ProjectFormModal';
-import ConnectRepoModal from './ConnectRepoModal.tsx';
+} from "@chakra-ui/react";
+import { useParams, useNavigate } from "react-router-dom";
+import useFetchProject from "../../hooks/useFetchProject";
+import ProjectFormModal from "./ProjectFormModal";
+import ConnectRepoModal from "./ConnectRepoModal.tsx";
 
 const ProjectDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: project, isLoading, isError } = useFetchProject(id || '');
-  const updateProjectMutation = useUpdateProject();
-  const connectRepoMutation = useConnectRepo();
+  const { data: project, isLoading, isError } = useFetchProject(id || "");
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isConnectRepoModalOpen, setIsConnectRepoModalOpen] = useState(false);
@@ -52,17 +46,18 @@ const ProjectDetail = () => {
     <Box p={6}>
       <VStack align="start" spacing={4}>
         <Heading>{project.name}</Heading>
-        <Text>{project.description || 'No description provided.'}</Text>
+        <Text>{project.description || "No description provided."}</Text>
         <Text>
-          <strong>Created At:</strong> {new Date(project.createdAt).toLocaleString()}
-        </Text>
-        <Text>
-          <strong>Updated At:</strong> {new Date(project.updatedAt).toLocaleString()}
+          <strong>Created At:</strong>{" "}
+          {new Date(project.createdAt).toLocaleString()}
         </Text>
         <Button colorScheme="yellow" onClick={() => setIsEditModalOpen(true)}>
           Edit Project
         </Button>
-        <Button colorScheme="blue" onClick={() => setIsConnectRepoModalOpen(true)}>
+        <Button
+          colorScheme="blue"
+          onClick={() => setIsConnectRepoModalOpen(true)}
+        >
           Connect Repository
         </Button>
         <Button colorScheme="red" onClick={() => navigate(-1)}>
@@ -74,7 +69,7 @@ const ProjectDetail = () => {
       <ProjectFormModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        project={project}
+        projectId={project.id}
       />
 
       {/* Connect Repository Modal */}

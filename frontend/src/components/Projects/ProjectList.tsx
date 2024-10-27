@@ -1,5 +1,3 @@
-// src/components/Projects/ProjectList.tsx
-
 import { useState, useMemo } from "react";
 import {
   Box,
@@ -16,7 +14,8 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
-import { FiPlus, FiEdit, FiTrash2, FiSearch } from "react-icons/fi";
+import { FiPlus, FiEdit, FiTrash2, FiSearch, FiEye } from "react-icons/fi"; // Import FiEye for the "View" icon
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import useFetchProjects, { Project } from "../../hooks/useFetchProjects";
 import useDeleteProject from "../../hooks/useDeleteProject";
 import ProjectFormModal from "./ProjectFormModal";
@@ -25,8 +24,10 @@ const ProjectList = () => {
   const { data: projects, isLoading, isError } = useFetchProjects();
   const deleteProjectMutation = useDeleteProject();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleDelete = (id: string) => {
     if (window.confirm("Are you sure you want to delete this project?")) {
@@ -35,13 +36,17 @@ const ProjectList = () => {
   };
 
   const handleEdit = (project: Project) => {
-    setEditingProject(project);
+    setEditingProjectId(project.id);
     setIsModalOpen(true);
   };
 
   const handleCreate = () => {
-    setEditingProject(null);
+    setEditingProjectId(null);
     setIsModalOpen(true);
+  };
+
+  const handleView = (id: string) => {
+    navigate(`/projects/${id}`); // Navigate to the project details page
   };
 
   const filteredProjects = useMemo(() => {
@@ -105,6 +110,14 @@ const ProjectList = () => {
                   <HStack spacing={2}>
                     <Button
                       size="sm"
+                      colorScheme="blue"
+                      leftIcon={<FiEye />} // Use FiEye icon for the "View" button
+                      onClick={() => handleView(project.id)} // Call the handleView function on click
+                    >
+                      View
+                    </Button>
+                    <Button
+                      size="sm"
                       colorScheme="yellow"
                       leftIcon={<FiEdit />}
                       onClick={() => handleEdit(project)}
@@ -136,7 +149,7 @@ const ProjectList = () => {
       <ProjectFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        project={editingProject}
+        projectId={editingProjectId!}
       />
     </Box>
   );

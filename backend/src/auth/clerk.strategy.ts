@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-custom';
-import * as clerk from '@clerk/clerk-sdk-node';
+import { clerkClient, verifyToken } from '@clerk/clerk-sdk-node';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()
@@ -18,30 +18,30 @@ export class ClerkStrategy extends PassportStrategy(Strategy, 'clerk') {
       }
 
       const token = authorizationHeader.split(' ')[1];
-      const clerkUser = await clerk.verifyToken(token, { });
+      const decodedToken = await verifyToken(token, {
+        secretKey: process.env.CLERK_SECRET_KEY,
+      });
 
-      if (!clerkUser) {
+      if (!decodedToken) {
         throw new UnauthorizedException('Invalid token');
       }
 
-      const { emailAddresses, firstName, lastName } = clerkUser;
+      const userId = decodedToken.sub;
+      const clerkUser = await clerkClient.users.getUser(userId);
 
-      // Check if the user exists in the database
       let user = await this.usersService.findByEmail(
-        emailAddresses[0].emailAddress,
+        clerkUser.emailAddresses[0].emailAddress,
       );
 
-      // If the user does not exist, create a new user
       if (!user) {
         user = await this.usersService.createUser({
-          email: emailAddresses[0].emailAddress,
-          name: `${firstName} ${lastName}`,
+          email: clerkUser.emailAddresses[0].emailAddress,
+          name: `${clerkUser.firstName} ${clerkUser.lastName}`,
         });
       }
 
-      // Return the user, which will be attached to the request object
       return user;
-    } catch (error) {
+    } catch (error: any) {
       throw new UnauthorizedException('Authentication failed');
     }
   }

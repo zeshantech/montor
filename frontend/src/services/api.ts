@@ -7,7 +7,7 @@ export function useApi() {
   const { getToken } = useAuth();
 
   const API = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:5000",
     headers: {
       "Content-Type": "application/json",
     },
@@ -15,8 +15,7 @@ export function useApi() {
 
   API.interceptors.request.use(
     async (config) => {
-      const token = await getToken(); // Await the token
-      console.log(token, "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+      const token = await getToken();
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

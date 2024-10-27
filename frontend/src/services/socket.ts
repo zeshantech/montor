@@ -7,7 +7,7 @@ class SocketService {
 
   public connect(token: string): Socket {
     if (!this.socket) {
-      this.socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:3000', {
+      this.socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000', {
         auth: {
           token,
         },

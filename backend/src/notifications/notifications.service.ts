@@ -1,5 +1,3 @@
-// backend/src/notifications/notifications.service.ts
-
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
@@ -12,7 +10,7 @@ export class NotificationsService {
     this.transporter = nodemailer.createTransport({
       host: this.configService.get<string>('EMAIL_HOST'),
       port: parseInt(this.configService.get<string>('EMAIL_PORT'), 10),
-      secure: false, // true for 465, false for other ports
+      secure: false,
       auth: {
         user: this.configService.get<string>('EMAIL_USER'),
         pass: this.configService.get<string>('EMAIL_PASS'),
@@ -20,12 +18,7 @@ export class NotificationsService {
     });
   }
 
-  // Send an email
-  async sendEmail(
-    to: string,
-    subject: string,
-    html: string,
-  ): Promise<void> {
+  async sendEmail(to: string, subject: string, html: string): Promise<void> {
     const mailOptions: nodemailer.SendMailOptions = {
       from: `"DevOps Dashboard" <${this.configService.get<string>('EMAIL_USER')}>`,
       to,

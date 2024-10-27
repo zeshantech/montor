@@ -1,139 +1,163 @@
-// backend/src/projects/projects.service.ts
-
 import {
-    Injectable,
-    NotFoundException,
-    ForbiddenException,
-    BadRequestException,
-  } from '@nestjs/common';
-  import { InjectRepository } from '@nestjs/typeorm';
-  import { Repository } from 'typeorm';
-  import { Project } from './project.entity';
-  import { User } from '../users/user.entity';
-  import { v4 as uuidv4 } from 'uuid';
-  import axios from 'axios';
-  import { ConfigService } from '@nestjs/config';
-  import { NotificationsService } from '../notifications/notifications.service';
-import { ConnectRepoDto, CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
-  
-  @Injectable()
-  export class ProjectsService {
-    constructor(
-      @InjectRepository(Project)
-      private projectsRepository: Repository<Project>,
-      private configService: ConfigService,
-    ) {}
-  
-    // Create a new project
-    async create(
-      createProjectDto: CreateProjectDto,
-      user: User,
-    ): Promise<Project> {
-      const project = this.projectsRepository.create({
-        ...createProjectDto,
-        createdBy: user,
-      });
-      return this.projectsRepository.save(project);
-    }
-  
-    async findAll(user: User): Promise<Project[]> {
-      return this.projectsRepository.find({
-        where: { createdBy: user },
-      });
-    }
-  
-    // Retrieve a single project
-    async findOne(id: number, user: User): Promise<Project> {
-      const project = await this.projectsRepository.findOne({
-        where: { id },
-      });
-      if (!project) {
-        throw new NotFoundException('Project not found');
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Project } from './project.entity';
+import { v4 as uuidv4 } from 'uuid';
+import { ConfigService } from '@nestjs/config';
+import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
+import { OctokitService } from 'nestjs-octokit';
+import { UsersService } from 'src/users/users.service';
+import { User } from 'src/users/user.entity';
+import { parseRepositoryUrl } from 'src/common/utils/parseRepositoryUrl';
+
+@Injectable()
+export class ProjectsService {
+  constructor(
+    @InjectRepository(Project)
+    private projectsRepository: Repository<Project>,
+    private readonly octokitService: OctokitService,
+    private usersService: UsersService,
+    private configService: ConfigService,
+  ) {}
+
+  async createProject(input: CreateProjectDto, user: User) {
+    const project = new Project();
+    project.description = input.description;
+    project.isPrivate = input.isPrivate;
+    project.repositoryUrl = input.repositoryUrl;
+    project.name = input.name;
+    project.user = user;
+    project.accessToken = input.accessToken;
+
+    if (input.repositoryUrl) {
+      let url = input.repositoryUrl;
+      if (input.accessToken) {
+        url = this.embedTokenInUrl(url, input.accessToken);
       }
-      
-      return project;
+      const result = await this.connectToRemoteRepository(url);
+      project.githubRepoId = result.id;
+      project.webhookSecret = result.webhookSecret;
+      project.isWebhookActive = result.isWebhookActive;
     }
-  
-    // Update a project
-    async update(
-      id: number,
-      updateProjectDto: UpdateProjectDto,
-      user: User,
-    ): Promise<Project> {
-      const project = await this.findOne(id, user);
-      Object.assign(project, updateProjectDto);
-      return this.projectsRepository.save(project);
+
+    await project.save();
+  }
+
+  async getUserAllProjects(userId: string): Promise<Project[]> {
+    return this.projectsRepository.findBy({ user: { id: userId } });
+  }
+
+  async getUserProjectById(id: string, userId: string): Promise<Project> {
+    const project = await this.projectsRepository.findOne({
+      where: { id, user: { id: userId } },
+    });
+    if (!project) {
+      throw new NotFoundException('Project not found');
     }
-  
-    // Delete a project
-    async remove(id: number, user: User): Promise<void> {
-      const project = await this.findOne(id, user);
-      await this.projectsRepository.remove(project);
+
+    return project;
+  }
+
+  async getOneById(id: string): Promise<Project> {
+    const project = await this.projectsRepository.findOne({
+      where: { id },
+    });
+    if (!project) {
+      throw new NotFoundException('Project not found');
     }
-  
-    // Connect GitHub repository and set up webhook
-    async connectRepository(
-      id: number,
-      connectRepoDto: ConnectRepoDto,
-      user: User,
-    ): Promise<Project> {
-      const project = await this.findOne(id, user);
-  
-      // Extract owner and repo name from repositoryUrl
-      const regex = /https:\/\/github\.com\/([^\/]+)\/([^\/]+)(\.git)?$/;
-      const match = connectRepoDto.repositoryUrl.match(regex);
-      if (!match) {
-        throw new BadRequestException('Invalid GitHub repository URL');
-      }
-      const owner = match[1];
-      const repo = match[2];
-  
-      // Generate a unique webhook secret
-      const webhookSecret = uuidv4();
-  
-      // Create GitHub webhook
-      try {
-        // To create a webhook, authenticate with GitHub using a token with admin:repo_hook permissions
-        const githubToken = this.configService.get<string>('GITHUB_TOKEN');
-        if (!githubToken) {
-          throw new Error('GitHub token not configured');
+
+    return project;
+  }
+
+  async removeProject(id: string, userId: string): Promise<void> {
+    const project = await this.getUserProjectById(id, userId);
+    await project.remove();
+  }
+
+  async updateProject(id: string, input: UpdateProjectDto, userId: string) {
+    try {
+      const project = await this.getUserProjectById(id, userId);
+
+      if (input.repositoryUrl) {
+        let url = input.repositoryUrl;
+        if (input.accessToken) {
+          url = this.embedTokenInUrl(url, input.accessToken);
         }
-  
-        const response = await axios.post(
-          `https://api.github.com/repos/${owner}/${repo}/hooks`,
-          {
-            name: 'web',
-            active: true,
-            events: ['push', 'pull_request'],
-            config: {
-              url: `${this.configService.get<string>('HOST_URL')}/webhooks/github`,
-              content_type: 'json',
-              secret: webhookSecret,
-              insecure_ssl: '0',
-            },
-          },
-          {
-            headers: {
-              Authorization: `token ${githubToken}`,
-              Accept: 'application/vnd.github.v3+json',
-            },
-          },
-        );
-  
-        if (response.status === 201) {
-          project.githubRepoId = response.data.id;
-          project.webhookSecret = webhookSecret;
-          project.isWebhookActive = true;
-          await this.projectsRepository.save(project);
-          return project;
-        } else {
-          throw new Error('Failed to create GitHub webhook');
-        }
-      } catch (error) {
-        throw new BadRequestException(
-          `Error connecting to GitHub repository: ${error.message}`,
-        );
+        const result = await this.connectToRemoteRepository(url);
+        project.githubRepoId = result.id;
+        project.webhookSecret = result.webhookSecret;
+        project.isWebhookActive = result.isWebhookActive;
       }
+
+      if (input.accessToken) project.accessToken = input.accessToken;
+      if (input.isPrivate) project.isPrivate = input.isPrivate;
+      if (input.repositoryUrl) project.repositoryUrl = input.repositoryUrl;
+      if (input.name) project.name = input.name;
+      if (input.description) project.description = input.description;
+
+      await project.save();
+    } catch (error) {
+      throw new BadRequestException(
+        `Error connecting to GitHub repository: ${error.message}`,
+      );
     }
   }
-  
+
+  async findOneByFilters(filters: Record<string, any>) {
+    const project = await this.projectsRepository.findOneBy({
+      ...filters,
+    });
+
+    return project;
+  }
+
+  async connectToRemoteRepository(url: string) {
+    const { owner, repo } = parseRepositoryUrl(url);
+
+    const webhookSecret = uuidv4();
+
+    try {
+      const githubToken = this.configService.get<string>('GITHUB_TOKEN');
+      if (!githubToken) {
+        throw new Error('GitHub token not configured');
+      }
+
+      const response = await this.octokitService.request(
+        `POST /repos/${owner}/${repo}/hooks`,
+        {
+          name: 'web',
+          active: true,
+          events: ['push', 'pull_request'],
+          config: {
+            url: `${this.configService.get<string>('HOST_URL')}/webhooks/github`,
+            content_type: 'json',
+            insecure_ssl: 1,
+            secret: webhookSecret,
+          },
+          headers: {
+            'X-GitHub-Api-Version': '2022-11-28',
+            Accept: 'application/vnd.github.v3+json',
+          },
+        },
+      );
+
+      if (response.status === 201) {
+        return { id: response.data.id, webhookSecret, isWebhookActive: true };
+      } else {
+        throw new Error('Failed to create GitHub webhook');
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  // Helper function to embed token into repository URL
+  embedTokenInUrl(url: string, token: string): string {
+    // Example: https://token@github.com/user/repo.git
+    return url.replace(/^https?:\/\//, `https://${encodeURIComponent(token)}@`);
+  }
+}

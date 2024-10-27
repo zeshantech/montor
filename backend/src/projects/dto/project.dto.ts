@@ -1,14 +1,11 @@
-// ./src/projects/dto/project.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
   IsNotEmpty,
   IsUrl,
   IsOptional,
   IsBoolean,
   IsString,
   MaxLength,
-  MinLength,
 } from 'class-validator';
 
 export class CreateProjectDto {
@@ -21,16 +18,22 @@ export class CreateProjectDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  description?: string;
-
-  @ApiProperty()
-  @IsUrl()
-  repositoryUrl: string;
+  description: string;
 
   @ApiProperty()
   @IsOptional()
   @IsBoolean()
-  isActive?: boolean;
+  isPrivate: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  repositoryUrl: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  accessToken: string;
 }
 
 export class UpdateProjectDto {
@@ -38,22 +41,27 @@ export class UpdateProjectDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  name?: string;
+  name: string;
 
   @ApiProperty()
   @IsOptional()
   @IsString()
-  description?: string;
-
-  @ApiProperty()
-  @IsOptional()
-  @IsUrl()
-  repositoryUrl?: string;
+  description: string;
 
   @ApiProperty()
   @IsOptional()
   @IsBoolean()
-  isActive?: boolean;
+  isPrivate: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsUrl()
+  repositoryUrl: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  accessToken: string;
 }
 
 export class ConnectRepoDto {
@@ -61,4 +69,31 @@ export class ConnectRepoDto {
   @IsNotEmpty()
   @IsUrl()
   repositoryUrl: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  isPrivate: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  accessToken: string;
+}
+
+export class ChangeStatusDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsUrl()
+  repositoryUrl: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  isPrivate: boolean;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  accessToken: string;
 }

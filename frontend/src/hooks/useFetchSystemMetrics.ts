@@ -4,7 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useApi } from "../services/api";
 
 interface SystemMetrics {
-  cpuLoad: number[];
+  cpuLoad: {
+    cores: number;
+    loadAverages: number[];
+  };
   freeMemory: number;
   totalMemory: number;
   usedMemory: number;

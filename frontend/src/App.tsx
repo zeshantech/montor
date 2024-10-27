@@ -20,7 +20,7 @@ const App = () => {
     defaultOptions: {
       mutations: {
         onError: () => {
-          alert('error')
+          alert('getting error')
         }
       },
     }

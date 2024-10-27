@@ -1,6 +1,3 @@
-// src/pages/ProjectsPage.tsx
-
-import React from 'react';
 import { Box, Heading } from '@chakra-ui/react';
 import ProjectList from '../components/Projects/ProjectList';
 

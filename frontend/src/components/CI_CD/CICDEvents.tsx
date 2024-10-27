@@ -19,7 +19,7 @@ import useFetchCICDEvents, { CICDEvent } from '../../hooks/useFetchCICDEvents';
 
 const CICDEvents = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: events, isLoading, isError } = useFetchCICDEvents(id || '');
+  const { data: events, isLoading, isError } = useFetchCICDEvents(id!);
 
   if (isLoading) {
     return (

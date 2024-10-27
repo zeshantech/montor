@@ -7,13 +7,17 @@ export interface Project {
   id: string;
   name: string;
   description?: string;
+  repositoryUrl?: string;
+  isPrivate?: boolean;
+  accessToken?: string;
   createdAt: string;
-  updatedAt: string;
+  githubRepoId?: string
+  webhookSecret?: string
+  isWebhookActive?: boolean
 }
 
 const useFetchProjects = () => {
   const { API } = useApi();
-
 
   return useQuery<Project[], Error>({
     queryKey: ["projects"],

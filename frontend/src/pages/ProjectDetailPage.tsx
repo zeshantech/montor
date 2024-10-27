@@ -1,6 +1,3 @@
-// src/pages/ProjectDetailPage.tsx
-
-import React from 'react';
 import { Box, Heading, Tabs, TabList, TabPanels, Tab, TabPanel, Button, HStack } from '@chakra-ui/react';
 import { useParams } from 'react-router-dom';
 import ProjectDetail from '../components/Projects/ProjectDetail';
@@ -9,7 +6,6 @@ import WorkflowRuns from '../components/CI_CD/WorkflowRuns';
 import useTriggerWorkflow from '../hooks/useTriggerWorkflow';
 import { useForm } from 'react-hook-form';
 import { FiPlay } from 'react-icons/fi';
-import { toast } from 'react-toastify';
 
 interface TriggerWorkflowForm {
     workflowName: string;
@@ -17,12 +13,12 @@ interface TriggerWorkflowForm {
 
 const ProjectDetailPage = () => {
     const { id } = useParams<{ id: string }>();
-    const triggerWorkflowMutation = useTriggerWorkflow();
+    const {mutateAsync} = useTriggerWorkflow();
     const { register, handleSubmit, reset } = useForm<TriggerWorkflowForm>();
 
     const onSubmit = (data: TriggerWorkflowForm) => {
         if (id) {
-            triggerWorkflowMutation.mutate(
+            mutateAsync(
                 { projectId: id, workflowName: data.workflowName },
                 {
                     onSuccess: () => {

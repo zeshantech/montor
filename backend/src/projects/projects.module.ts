@@ -9,7 +9,11 @@ import { UsersModule } from '../users/users.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Project]), UsersModule, NotificationsModule],
+  imports: [
+    TypeOrmModule.forFeature([Project]),
+    UsersModule,
+    NotificationsModule,
+  ],
   providers: [ProjectsService],
   controllers: [ProjectsController],
   exports: [ProjectsService],

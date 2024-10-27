@@ -17,6 +17,7 @@ import { JenkinsModule } from './jenkins/jenkins.module';
 import { DockerModule } from './docker/docker.module';
 import { LoggingMiddleware } from './middleware/logging.middleware';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { OctokitModule } from 'nestjs-octokit';
 
 @Module({
   imports: [
@@ -38,10 +39,22 @@ import { ThrottlerModule } from '@nestjs/throttler';
         synchronize: true, // Disable in production
       }),
     }),
-    ThrottlerModule.forRoot([{
-      ttl: 60, // Time to live in seconds
-      limit: 100, // Max number of requests within TTL
-    }]),
+    OctokitModule.forRootAsync({
+      isGlobal: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        octokitOptions: {
+          auth: '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',
+        },
+      }),
+    }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60, // Time to live in seconds
+        limit: 100, // Max number of requests within TTL
+      },
+    ]),
     UsersModule,
     AuthModule,
     ProjectsModule,
