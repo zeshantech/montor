@@ -16,13 +16,12 @@ interface ChangePasswordResponse {
 const useChangePassword = () => {
   const { API } = useApi();
 
-  
   return useMutation<ChangePasswordResponse, Error, ChangePasswordData>({
     mutationFn: async (data: ChangePasswordData) => {
       const response = await API.post("/users/change-password", data); // Ensure this endpoint exists
       return response.data;
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to change password:", error);
     },
   });

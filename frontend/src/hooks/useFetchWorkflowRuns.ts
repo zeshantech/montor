@@ -1,4 +1,4 @@
-// src/hooks/useFetchWorkflowRuns.ts
+// frontend/src/hooks/useFetchWorkflowRuns.ts
 
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "../services/api";
@@ -6,17 +6,13 @@ import { useApi } from "../services/api";
 export interface WorkflowRun {
   id: number;
   name: string;
-  // actor: {},
   status: string;
-  run_started_at: string;
-  completedAt: string;
-  result: string;
-  run_number: string;
+  conclusion: string;
+  run_number: number;
   head_branch: string;
   head_sha: string;
-  conclusion: string;
-  created_at: string
-  updated_at: string
+  created_at: string;
+  updated_at: string;
   html_url: string;
 }
 
@@ -24,9 +20,9 @@ const useFetchWorkflowRuns = (projectId: string) => {
   const { API } = useApi();
 
   return useQuery<WorkflowRun[], Error>({
-    queryKey: ["workflowRuns"],
+    queryKey: ["workflowRuns", projectId],
     queryFn: async () => {
-      const response = await API.get(`/cicd/workflow/${projectId}/runs`);
+      const response = await API.get<WorkflowRun[]>(`/cicd/workflow/${projectId}/runs`);
       return response.data;
     },
     enabled: !!projectId,

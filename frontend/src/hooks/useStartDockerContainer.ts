@@ -1,5 +1,3 @@
-// src/hooks/useStartDockerContainer.ts
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApi } from "../services/api";
 
@@ -9,15 +7,13 @@ const useStartDockerContainer = () => {
 
   return useMutation({
     mutationFn: async (containerId: string) => {
-      const response = await API.post(
-        `/docker/containers/${containerId}/start`
-      );
+      const response = await API.post(`/docker/containers/${containerId}/start`);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["dockerContainers"]);
+      queryClient.invalidateQueries({ queryKey: ["dockerContainers"] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to start container:", error);
       alert("Failed to start the container. Please try again.");
     },

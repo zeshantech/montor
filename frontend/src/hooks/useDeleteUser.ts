@@ -7,16 +7,15 @@ const useDeleteUser = () => {
   const { API } = useApi();
   const queryClient = useQueryClient();
 
-
   return useMutation({
     mutationFn: async (userId: string) => {
       const response = await API.delete(`/users/${userId}`); // Ensure this endpoint exists and is admin-protected
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to delete user:", error);
       alert("Failed to delete the user. Please try again.");
     },

@@ -23,9 +23,9 @@ const useUpdateUserProfile = () => {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["userProfile"]);
+      queryClient.invalidateQueries({ queryKey: ["userProfile"] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to update profile:", error);
     },
   });

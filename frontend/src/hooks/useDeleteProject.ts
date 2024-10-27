@@ -18,9 +18,9 @@ const useDeleteProject = () => {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["projects"]);
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to delete project:", error);
       alert("Failed to delete project. Please try again.");
     },

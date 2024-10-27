@@ -13,9 +13,9 @@ const useRemoveDockerContainer = () => {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["dockerContainers"]);
+      queryClient.invalidateQueries({ queryKey: ["dockerContainers"] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to remove container:", error);
       alert("Failed to remove the container. Please try again.");
     },

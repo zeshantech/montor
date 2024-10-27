@@ -17,16 +17,14 @@ const useCancelWorkflow = () => {
 
   return useMutation<CancelWorkflowResponse, Error, CancelWorkflowData>({
     mutationFn: async (data: CancelWorkflowData) => {
-      const response = await API.post(
-        `/cicd/workflow/${data.projectId}/cancel/${data.workflowRunId}`,
-      );
+      const response = await API.post(`/cicd/workflow/${data.projectId}/cancel/${data.workflowRunId}`);
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       toast.success("Workflow canceled successfully.");
-      queryClient.invalidateQueries(["workflowRuns"]);
+      queryClient.invalidateQueries({ queryKey: ["workflowRuns", variables.projectId] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to cancel workflow:", error);
       toast.error("Failed to cancel workflow. Please try again.");
     },

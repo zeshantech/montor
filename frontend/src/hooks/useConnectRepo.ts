@@ -16,22 +16,15 @@ const useConnectRepo = () => {
   const { API } = useApi();
   const queryClient = useQueryClient();
 
-  return useMutation<
-    ConnectRepoResponse,
-    Error,
-    { projectId: string; data: ConnectRepoData }
-  >({
+  return useMutation<ConnectRepoResponse, Error, { projectId: string; data: ConnectRepoData }>({
     mutationFn: async ({ projectId, data }) => {
-      const response = await API.post(
-        `/projects/${projectId}/connect-repo`,
-        data
-      );
+      const response = await API.post(`/projects/${projectId}/connect-repo`, data);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["projects"]);
+      queryClient.invalidateQueries({ queryKey: ["projects"] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to connect repository:", error);
       alert("Failed to connect repository. Please try again.");
     },

@@ -1,5 +1,3 @@
-// src/hooks/useStopDockerContainer.ts
-
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApi } from "../services/api";
 
@@ -14,9 +12,9 @@ const useStopDockerContainer = () => {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["dockerContainers"]);
+      queryClient.invalidateQueries({ queryKey: ["dockerContainers"] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to stop container:", error);
       alert("Failed to stop the container. Please try again.");
     },

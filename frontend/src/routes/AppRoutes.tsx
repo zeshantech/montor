@@ -31,9 +31,5 @@ const AppRoutes = () => {
     </Suspense>
   );
 };
-{
-  /* Fallback Route */
-}
-// <Route path="*" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
 
 export default AppRoutes;

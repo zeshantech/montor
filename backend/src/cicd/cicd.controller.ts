@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
-import { CicdService } from './cicd.service';
+import { CicdService, LogEntry } from './cicd.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('cicd')
@@ -46,7 +46,7 @@ export class CicdController {
   async downloadWorkflowLogs(
     @Param('projectId') projectId: string,
     @Param('workflowRunId') workflowRunId: number,
-  ): Promise<any> {
+  ): Promise<{ message: string; logs: LogEntry[] }> {
     return this.cicdService.downloadWorkflowLogs(projectId, workflowRunId);
   }
 

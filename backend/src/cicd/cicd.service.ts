@@ -9,6 +9,13 @@ import { UsersService } from 'src/users/users.service';
 import { parseRepositoryUrl } from 'src/common/utils/parseRepositoryUrl';
 import * as unzipper from 'unzipper';
 
+export interface LogEntry {
+  filePath: string;
+  timestamp: string;
+  level: 'error' | 'warning' | 'info' | 'debug' | 'success' | 'other';
+  message: string;
+}
+
 @Injectable()
 export class CicdService {
   constructor(
@@ -52,7 +59,7 @@ export class CicdService {
   async getWorkflowRuns(projectId: string) {
     const project = await this.projectService.getOneById(projectId);
     if (!project.isWebhookActive) {
-      throw new BadGatewayException('project is not connected');
+      throw new BadGatewayException('Project is not connected');
     }
 
     const { owner, repo } = parseRepositoryUrl(project.repositoryUrl);
@@ -145,7 +152,10 @@ export class CicdService {
     }
   }
 
-  async downloadWorkflowLogs(projectId: string, workflowRunId: number) {
+  async downloadWorkflowLogs(
+    projectId: string,
+    workflowRunId: number,
+  ): Promise<{ message: string; logs: LogEntry[] }> {
     const project = await this.projectService.getOneById(projectId);
 
     if (!project.isWebhookActive) {
@@ -166,20 +176,22 @@ export class CicdService {
 
       const directory = await unzipper.Open.buffer(buffer);
 
-      let allLogs = '';
+      const logs: LogEntry[] = [];
 
       for (const file of directory.files) {
         if (!file.path.endsWith('/')) {
           const contentBuffer = await file.buffer();
           const content = contentBuffer.toString('utf-8');
 
-          allLogs += `\n--- ${file.path} ---\n${content}\n`;
+          const parsedLogs = this.parseAndFilterLogs(file.path, content);
+
+          logs.push(...parsedLogs);
         }
       }
 
       return {
         message: 'Logs downloaded successfully',
-        logs: allLogs,
+        logs,
       };
     } catch (error) {
       console.error('Error downloading logs:', error);
@@ -212,6 +224,73 @@ export class CicdService {
       console.error('Error retrieving artifacts:', error);
       throw new BadGatewayException('Failed to retrieve artifacts');
     }
+  }
+
+  private parseAndFilterLogs(filePath: string, logContent: string): LogEntry[] {
+    const lines = logContent.split('\n');
+    const usefulLines: LogEntry[] = [];
+
+    for (const line of lines) {
+      if (line.trim() === '') continue; // Remove empty lines
+      if (line.startsWith('##[')) continue; // Remove GitHub Actions commands
+
+      // Remove ANSI color codes
+      const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, '');
+
+      // Define log levels based on keywords
+      let level: LogEntry['level'] = 'other';
+      if (cleanLine.toLowerCase().includes('error')) {
+        level = 'error';
+      } else if (cleanLine.toLowerCase().includes('warning')) {
+        level = 'warning';
+      } else if (cleanLine.toLowerCase().includes('debug')) {
+        level = 'debug';
+      } else if (cleanLine.toLowerCase().includes('info')) {
+        level = 'info';
+      } else if (cleanLine.toLowerCase().includes('success')) {
+        level = 'success';
+      }
+
+      // Extract timestamp
+      const timestampMatch = cleanLine.match(
+        /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+Z/,
+      );
+      const timestamp = timestampMatch ? timestampMatch[0] : '';
+
+      // Extract message (remove timestamp and any other prefixes)
+      let message = cleanLine;
+      if (timestamp) {
+        message = cleanLine.replace(timestamp, '').trim();
+      }
+
+      // Further filtering based on patterns (customize as needed)
+      const unusefulPatterns = [
+        'Starting:',
+        'Finishing:',
+        'Pulling docker image',
+        'Status:',
+        'Download action repository',
+        'Completed job',
+        'git version',
+        'Cleaning up orphan processes',
+        'Post job cleanup.',
+        // Add more patterns as needed
+      ];
+
+      const isUnuseful = unusefulPatterns.some((pattern) =>
+        message.includes(pattern),
+      );
+      if (isUnuseful) continue;
+
+      usefulLines.push({
+        filePath,
+        timestamp,
+        level,
+        message,
+      });
+    }
+
+    return usefulLines;
   }
 
   private async handleNotifications(projectId: string, event: CICDEvent) {

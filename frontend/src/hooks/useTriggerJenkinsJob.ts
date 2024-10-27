@@ -10,14 +10,12 @@ const useTriggerJenkinsJob = () => {
 
   return useMutation({
     mutationFn: async (jobName: string) => {
-      const response = await API.post(
-        `/jenkins/trigger/${encodeURIComponent(jobName)}`
-      );
+      const response = await API.post(`/jenkins/trigger/${encodeURIComponent(jobName)}`);
       return response.data;
     },
     onSuccess: () => {
       toast.success("Jenkins job triggered successfully.");
-      queryClient.invalidateQueries(["jenkinsJobs"]);
+      queryClient.invalidateQueries({ queryKey: ["jenkinsJobs"] });
     },
     onError: () => {
       toast.error("Failed to trigger Jenkins job.");

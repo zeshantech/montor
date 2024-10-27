@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Heading, List, ListItem, Spinner, Center, Text, Alert, AlertIcon, VStack, Badge, Button, IconButton, HStack, Divider } from "@chakra-ui/react";
 import { RepeatIcon, ExternalLinkIcon, CloseIcon } from "@chakra-ui/icons";
-import useFetchWorkflowRuns from "../../hooks/useFetchWorkflowRuns";
+import useFetchWorkflowRuns, { WorkflowRun } from "../../hooks/useFetchWorkflowRuns";
 import { useParams } from "react-router-dom";
 import { formatDistanceToNow, differenceInMonths } from "date-fns";
 import useRerunWorkflow from "../../hooks/useRerunWorkflow";
@@ -60,7 +60,7 @@ const WorkflowRuns = () => {
       </Heading>
       {runs && runs.length > 0 ? (
         <List spacing={3}>
-          {runs.map((run) => (
+          {runs.map((run: WorkflowRun) => (
             <ListItem key={run.id} borderWidth={1} borderRadius="md" p={4} boxShadow="lg">
               <VStack align="start" spacing={2}>
                 <Heading size="sm" color="blue.500">
@@ -77,11 +77,11 @@ const WorkflowRuns = () => {
                   <Text>
                     <strong>Status:</strong>
                   </Text>
-                  <Badge colorScheme={run.status === "completed" ? "green" : "yellow"}>{run.status}</Badge>
+                  <Badge colorScheme={getStatusColor(run.status)}>{run.status}</Badge>
                   <Text>
                     <strong>Conclusion:</strong>
                   </Text>
-                  <Badge colorScheme={run.conclusion === "success" ? "green" : "red"}>{run.conclusion || "N/A"}</Badge>
+                  <Badge colorScheme={getConclusionColor(run.conclusion)}>{run.conclusion || "N/A"}</Badge>
                 </HStack>
 
                 <HStack>
@@ -100,12 +100,12 @@ const WorkflowRuns = () => {
                     View on GitHub
                   </Button>
 
-                  {canRerun(run.created_at) ? <IconButton aria-label="Rerun Workflow" onClick={() => handleRerun(run.id)} isLoading={isRerunLoading} icon={<RepeatIcon />} colorScheme="yellow" /> : <Text color="gray.500">Rerun unavailable (older than 1 month)</Text>}
-                  {canCancel(run.status) ? <IconButton aria-label="Cancel Workflow" onClick={() => handleCancel(run.id)} isLoading={isCancelLoading} icon={<CloseIcon />} colorScheme="red" /> : <Text color="gray.500">Cannot cancel (status: {run.status})</Text>}
+                  <IconButton disabled={!canRerun(run.created_at)} aria-label="Rerun Workflow" onClick={() => handleRerun(run.id)} isLoading={isRerunLoading} icon={<RepeatIcon />} colorScheme="yellow" />
+                  <IconButton disabled={!canCancel(run.status)} aria-label="Cancel Workflow" onClick={() => handleCancel(run.id)} isLoading={isCancelLoading} icon={<CloseIcon />} colorScheme="red" />
 
                   {run.status === "completed" && (
                     <Button colorScheme="purple" onClick={() => toggleLogs(run.id)}>
-                      {selectedWorkflowRunId === run.id ? "Hide" : "View Logs"}
+                      {selectedWorkflowRunId === run.id ? "Hide Logs" : "View Logs"}
                     </Button>
                   )}
                 </HStack>
@@ -116,10 +116,38 @@ const WorkflowRuns = () => {
           ))}
         </List>
       ) : (
-        <Center>No workflow runs found.</Center>
+        <Center>
+          <Text>No workflow runs found.</Text>
+        </Center>
       )}
     </Box>
   );
+};
+
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "completed":
+      return "green";
+    case "in_progress":
+      return "yellow";
+    case "queued":
+      return "blue";
+    default:
+      return "gray";
+  }
+};
+
+const getConclusionColor = (conclusion: string | null) => {
+  switch (conclusion) {
+    case "success":
+      return "green";
+    case "failure":
+      return "red";
+    case "cancelled":
+      return "orange";
+    default:
+      return "gray";
+  }
 };
 
 export default WorkflowRuns;

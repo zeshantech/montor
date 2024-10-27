@@ -1,14 +1,13 @@
-// src/hooks/useFetchCICDEvents.ts
-
 import { useQuery } from "@tanstack/react-query";
 import { useApi } from "../services/api";
 
 export interface CICDEvent {
-  id: string;
-  projectId: string;
+  id: number;
   eventType: string;
-  timestamp: string;
-  details: string;
+  status: string;
+  commitSha: string;
+  branch: string;
+  createdAt: string;
 }
 
 const useFetchCICDEvents = (projectId: string) => {
@@ -17,11 +16,11 @@ const useFetchCICDEvents = (projectId: string) => {
   return useQuery<CICDEvent[], Error>({
     queryKey: ["cicdEvents", projectId],
     queryFn: async () => {
-      const response = await API.get(`/cicd/${projectId}/events`);
+      const response = await API.get<CICDEvent[]>(`/cicd/${projectId}/events`);
       return response.data;
     },
     enabled: !!projectId,
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 1,
   });
 };

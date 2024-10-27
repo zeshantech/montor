@@ -1,7 +1,12 @@
-// hooks/useDownloadWorkflowLogs.ts
-
 import { useMutation } from "@tanstack/react-query";
 import { useApi } from "../services/api";
+
+export interface LogEntry {
+  filePath: string;
+  timestamp: string;
+  level: "error" | "warning" | "info" | "debug" | "success" | "other";
+  message: string;
+}
 
 interface DownloadLogsData {
   projectId: string;
@@ -10,7 +15,7 @@ interface DownloadLogsData {
 
 interface WorkflowLogsResponse {
   message: string;
-  logs: string;
+  logs: LogEntry[];
 }
 
 const useDownloadWorkflowLogs = () => {
@@ -18,9 +23,7 @@ const useDownloadWorkflowLogs = () => {
 
   return useMutation<WorkflowLogsResponse, Error, DownloadLogsData>({
     mutationFn: async ({ projectId, workflowRunId }) => {
-      const response = await API.get(
-        `/cicd/workflow/${projectId}/run-logs/${workflowRunId}`
-      );
+      const response = await API.get<WorkflowLogsResponse>(`/cicd/workflow/${projectId}/run-logs/${workflowRunId}`);
       return response.data;
     },
   });

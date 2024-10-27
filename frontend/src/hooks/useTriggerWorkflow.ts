@@ -14,20 +14,17 @@ interface TriggerWorkflowResponse {
 const useTriggerWorkflow = () => {
   const { API } = useApi();
   const queryClient = useQueryClient();
-  
 
   return useMutation<TriggerWorkflowResponse, Error, TriggerWorkflowData>({
     mutationFn: async (data: TriggerWorkflowData) => {
-      const response = await API.post(
-        `/cicd/workflow/${data.projectId}/trigger/${encodeURIComponent(data.workflowName)}`,
-      );
+      const response = await API.post(`/cicd/workflow/${data.projectId}/trigger/${encodeURIComponent(data.workflowName)}`);
       return response.data;
     },
     onSuccess: () => {
       toast.success("Workflow triggered successfully.");
-      queryClient.invalidateQueries(["workflowRuns"]);
+      queryClient.invalidateQueries({ queryKey: ["workflowRuns"] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to trigger workflow:", error);
       toast.error("Failed to trigger workflow. Please try again.");
     },

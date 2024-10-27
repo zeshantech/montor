@@ -20,11 +20,11 @@ const useRerunWorkflow = () => {
       const response = await API.post(`/cicd/workflow/${data.projectId}/rerun/${data.workflowRunId}`);
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       toast.success("Workflow rerun triggered successfully.");
-      queryClient.invalidateQueries(["workflowRuns"]);
+      queryClient.invalidateQueries({ queryKey: ["workflowRuns", variables.projectId] });
     },
-    onError: (error: any) => {
+    onError: (error) => {
       console.error("Failed to rerun workflow:", error);
       toast.error("Failed to rerun workflow. Please try again.");
     },

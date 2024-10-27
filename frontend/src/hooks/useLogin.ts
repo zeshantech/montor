@@ -1,8 +1,8 @@
 // src/hooks/useLogin.ts
 
-import { useMutation } from '@tanstack/react-query';
-import API from '../services/api';
-import { useAuth } from './useAuth';
+import { useMutation } from "@tanstack/react-query";
+import API from "../services/api";
+import { useAuth } from "./useAuth";
 
 interface LoginData {
   email: string;
@@ -19,16 +19,16 @@ const useLogin = () => {
 
   return useMutation({
     mutationFn: async (data: LoginData) => {
-      const response = await API.post<LoginResponse>('/auth/login', data);
+      const response = await API.post<LoginResponse>("/auth/login", data);
       return response.data;
     },
     onSuccess: (data) => {
       login(data.access_token, data.user);
     },
-    onError: (error: any) => {
-      console.error('Login failed:', error.response?.data?.message || error.message);
-      alert('Login failed. Please check your credentials.');
-    }
+    onError: (error) => {
+      console.error("Login failed:", error.response?.data?.message || error.message);
+      alert("Login failed. Please check your credentials.");
+    },
   });
 };
 
